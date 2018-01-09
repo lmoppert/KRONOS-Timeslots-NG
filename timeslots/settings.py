@@ -22,7 +22,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 SECRET_KEY = SECRET_KEY
 DEBUG = True
-ALLOWED_HOSTS = ['kronos-timeslots.com', 'timeslots.kronosww.com', 'localhost']
+ALLOWED_HOSTS = [
+    'kronos-timeslots.com',
+    'timeslots.kronosww.com',
+    'localhost',
+    'testserver',
+]
 ADMINS = [('Lutz Moppert', 'lutz.moppert@kronosww.com'), ]
 
 
@@ -35,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
-    # 'timeslots',
+    'slots',
     # 'crispy_forms',
     # 'django_tables2',
 ]
@@ -87,18 +92,18 @@ DATABASES = {
 }
 
 
-
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
 
+PV = 'django.contrib.auth.password_validation.',
 AUTH_PASSWORD_VALIDATORS = [{
-    'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    'NAME': '{}UserAttributeSimilarityValidator'.format(PV),
 }, {
-    'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    'NAME': '{}MinimumLengthValidator'.format(PV),
 }, {
-    'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    'NAME': '{}CommonPasswordValidator'.format(PV),
 }, {
-    'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    'NAME': '{}NumericPasswordValidator'.format(PV),
 }, ]
 
 
