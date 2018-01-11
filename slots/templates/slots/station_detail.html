@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block base_content %}
+<h1>{{ object }}</h1>
+{% for dock, slots in docks.items %}
+    <h2>{{ dock }}</h2>
+    <table>
+        {% for slot in slots %}
+        <tr>
+            {% for col in slot %}
+            {% if forloop.counter0 %}
+                <td>{{ col }}</td>
+            {% else %}
+                <th>{{ col }}</th>
+            {% endif %}
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
+{% endfor %}
+
+{% endblock %}
+<!-- vim:syntax=htmldjango
+-->

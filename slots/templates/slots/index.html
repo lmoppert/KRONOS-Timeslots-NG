@@ -1,8 +1,15 @@
-<html>
-    <head>
-        <title>New Timeslots</title>
-    </head>
-    <body>
-        <h1>New Timeslots</h1>
-    </body>
-</html>
+{% extends "base.html" %}
+{% block base_content %}
+    <h1>New Timeslots</h1>
+
+    <ul>
+        {% for object in objects %}
+        <li>
+            <a href="{{ object.get_absolute_url }}">{{ object }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}
+<!-- vim:syntax=htmldjango
+-->

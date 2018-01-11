@@ -15,6 +15,6 @@ psycopg2
 ##############################################################################
 # Optional packages for development server
 ##############################################################################
-# django-debug-toolbar
+django-debug-toolbar
 django-extensions
 coverage

@@ -28,6 +28,7 @@ ALLOWED_HOSTS = [
     'localhost',
     'testserver',
 ]
+INTERNAL_IPS = ['127.0.0.1', '10.49.2.96']
 ADMINS = [('Lutz Moppert', 'lutz.moppert@kronosww.com'), ]
 
 
@@ -40,12 +41,14 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
+    'debug_toolbar',
     'slots',
     # 'crispy_forms',
     # 'django_tables2',
 ]
 
 MIDDLEWARE = [
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -60,7 +63,7 @@ ROOT_URLCONF = 'timeslots.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -121,3 +124,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
+# Django-Extensions
+
+SHELL_PLUS_PRE_IMPORTS = [('scripts.helper', 'generate_slots')]

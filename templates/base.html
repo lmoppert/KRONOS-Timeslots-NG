@@ -1,0 +1,26 @@
+{% load static from staticfiles %}
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta charset="utf-8">
+    <meta name="description" content="KRONOS - New Timeslots">
+    <meta name="author" content="Lutz Moppert">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KRONOS - Timeslots</title>
+    <link rel="shortcut icon" type="image/ico" href="{% static
+        "timeslots/img/favicon.ico" %}">
+    <link rel="stylesheet" type="text/css" href="{% static
+        "timeslots/css/base.css" %}">
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <div id="main">
+        <div class="container">
+            {% block base_content %}{% endblock %}
+        </div>
+    </div>
+</body>
+</html>
+<!-- vim:syntax=htmldjango
+-->

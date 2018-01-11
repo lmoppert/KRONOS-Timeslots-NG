@@ -4,40 +4,100 @@ from slots.apps import SlotsConfig
 from slots import models
 
 
-# Test app
+# Test basics
 class SlotsConfigTest(TestCase):
     def test_apps(self):
         self.assertEqual(SlotsConfig.name, 'slots')
         self.assertEqual(apps.get_app_config('slots').name, 'slots')
 
 
+class HelperScriptsTest(TestCase):
+    def test_generate_slots(self):
+        from scripts.helper import generate_slots
+
+        slotlist = ['07:00', '07:45', '08:30', '09:15', '10:00']
+        self.assertEquals(generate_slots('7:00', 45, 5), slotlist)
+
+
 # Test models
 class StationTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.station = models.Station(company="KRONOS Leverkusen",
+                                     name="TiO2 packed")
+        cls.station.save()
+        cls.dl = models.Deadline(name="Default")
+        cls.dl.save()
+        cls.dock = models.Dock(name="Truck", station=cls.station,
+                               deadline=cls.dl)
+        cls.dock.save()
+
     def test_station_creation(self):
-        station = models.Station(company="KRONOS Leverkusen",
-                                 name="TiO2 packed")
-        self.assertTrue(isinstance(station, models.Station))
-        self.assertEqual(station.__str__(), "{} - {}".format(station.company,
-                                                             station.name))
+        self.assertTrue(isinstance(self.station, models.Station))
+        self.assertEqual(self.station.__str__(), "{} - {}".format(
+            self.station.company, self.station.name))
+        self.assertEqual(self.station.id, 1)
+        self.assertEqual(self.station.get_absolute_url(),
+                         '/{}'.format(self.station.id))
 
     def test_deadline_creation(self):
-        dl = models.Deadline(name="Default")
-        self.assertTrue(isinstance(dl, models.Deadline))
-        self.assertEqual(dl.__str__(), "{} ({} / {})".format(
-            dl.name, dl.booking_deadline, dl.rnvp))
+        self.assertTrue(isinstance(self.dl, models.Deadline))
+        self.assertEqual(self.dl.__str__(), "{} ({} / {})".format(
+            self.dl.name, self.dl.booking_deadline, self.dl.rnvp))
 
     def test_dock_creation(self):
-        station = models.Station(company="KRONOS Leverkusen",
-                                 name="TiO2 packed")
-        dl = models.Deadline(name="Default")
-        dock = models.Dock(name="Truck", station=station, deadline=dl)
-        self.assertTrue(isinstance(dock, models.Dock))
+        self.assertTrue(isinstance(self.dock, models.Dock))
+
+
+class DockTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        myslots = [['7:00', '8:00', '9:00'], ['7:30'], [], [], [], [], []]
+        cls.station = models.Station(company="KRONOS Leverkusen",
+                                     name="TiO2 packed")
+        cls.dl = models.Deadline(name="Default")
+        cls.dock = models.Dock(name="Truck", station=cls.station,
+                               deadline=cls.dl, available_slots=myslots)
+
+    def test_dock_creation(self):
+        self.assertTrue(isinstance(self.dock, models.Dock))
+        self.assertEqual(self.dock.__str__(), "{} - {}".format(
+            self.station, self.dock.name))
+
+    def test_dock_slot_flag(self):
+        self.assertTrue(self.dock.has_slots(1))
+        self.assertFalse(self.dock.has_slots(2))
+        self.assertFalse(self.dock.has_slots(9))
+
+    def test_dock_slot_list(self):
+        self.assertEqual(self.dock.list_slots(1), ['7:30'])
+        self.assertEqual(self.dock.list_slots(2), [])
+        self.assertEqual(self.dock.list_slots(9), None)
 
 
 # Test views
 class ViewsTests(TestCase):
-    def test_index(self):
+    @classmethod
+    def setUpTestData(cls):
+        cls.station = models.Station(company="KRONOS Leverkusen",
+                                     name="TiO2 packed")
+        cls.station.save()
+        cls.dl = models.Deadline(name="Default")
+        cls.dl.save()
+        myslots = [['7:00', '8:00', '9:00'], ['7:30'], [], [], [], [], []]
+        cls.dock = models.Dock(name="Truck", station=cls.station,
+                               deadline=cls.dl, available_slots=myslots)
+        cls.dock.save()
         from django.test import Client
-        c = Client()
-        res = c.get('/')
-        self.assertContains(res, 'Timeslots', 2)
+        cls.c = Client()
+
+    def test_index(self):
+        res = self.c.get('/')
+        self.assertContains(res, 'Timeslots', 3)
+
+    def test_station(self):
+        res = self.c.get('/{}'.format(self.station.id))
+        self.assertContains(res, 'KRONOS Leverkusen')
+        self.assertContains(res, 'Truck')
+        res = self.c.get('/{}/date/2018/1/2'.format(self.station.id))
+        self.assertContains(res, '7:30')

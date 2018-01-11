@@ -1,6 +1,7 @@
 # from datetime import timedelta, datetime, time
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.postgres.fields import JSONField
+from django.urls import reverse
 from django.db import models
 
 
@@ -47,6 +48,9 @@ class Station(models.Model):
     def __str__(self):
         return "{} - {}".format(self.company, self.name)
 
+    def get_absolute_url(self):
+        return reverse('station', args=[str(self.id)])
+
     class Meta:
         verbose_name = _("Station")
         verbose_name_plural = _("Stations")
@@ -54,7 +58,8 @@ class Station(models.Model):
 
 class Dock(models.Model):
     name = models.CharField(max_length=200)
-    station = models.ForeignKey(Station, on_delete=models.CASCADE)
+    station = models.ForeignKey(Station, on_delete=models.CASCADE,
+                                related_name='docks')
     linecount = models.IntegerField(default=1)
     available_slots = JSONField(default=[[], [], [], [], [], [], []])
     max_slots = models.IntegerField(default=0, help_text=_("0 for unlimited"))
@@ -92,6 +97,9 @@ class Dock(models.Model):
             return self.available_slots[weekday]
         else:
             return None
+
+    def __str__(self):
+        return "{} - {}".format(self.station, self.name)
 
     class Meta:
         ordering = ('station', 'name')
