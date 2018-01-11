@@ -34,4 +34,5 @@ class StationDetail(generic.DeleteView):
         for dock in station.docks.all():
             docklist[dock.name] = self.get_dock_data(dock, showdate)
         context['docks'] = docklist
+        context['showdate'] = showdate.strftime("%A, %x")
         return context

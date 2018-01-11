@@ -1,22 +1,27 @@
 {% extends "base.html" %}
 {% block base_content %}
-<h1>{{ object }}</h1>
+<h2>{{ showdate }}<br><small>{{ object }}</small></h2>
+<hr>
+<div class="row">
 {% for dock, slots in docks.items %}
-    <h2>{{ dock }}</h2>
-    <table>
+<div class="col-sm">
+    <h3 class="text-center">{{ dock }}</h3>
+    <table class="table table-striped table-bordered table-hover table-sm">
         {% for slot in slots %}
         <tr>
             {% for col in slot %}
             {% if forloop.counter0 %}
                 <td>{{ col }}</td>
             {% else %}
-                <th>{{ col }}</th>
+                <th style="width: 3.5em;" class="table-active">{{ col }}</th>
             {% endif %}
             {% endfor %}
         </tr>
         {% endfor %}
     </table>
+</div>
 {% endfor %}
+</div>
 
 {% endblock %}
 <!-- vim:syntax=htmldjango
