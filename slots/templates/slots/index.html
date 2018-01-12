@@ -1,14 +1,18 @@
 {% extends "base.html" %}
 {% block base_content %}
+<div class="row">
     <h1>New Timeslots</h1>
-
-    <ul>
-        {% for object in objects %}
-        <li>
-            <a href="{{ object.get_absolute_url }}">{{ object }}</a>
-        </li>
-        {% endfor %}
-    </ul>
+    <div class="col-6">
+        <h2>Available Stations</h2>
+        <table class="table table-hover table-striped table-bordered">
+            {% for object in objects %}
+            <tr>
+                <td><a href="{{ object.get_absolute_url }}">{{ object }}</a></td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
 
 {% endblock %}
 <!-- vim:syntax=htmldjango

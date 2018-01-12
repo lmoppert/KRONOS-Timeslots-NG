@@ -15,9 +15,16 @@ class StationDetail(generic.DeleteView):
 
     def get_dock_data(self, dock, date):
         starttimes = dock.available_slots[date.weekday()]
+        reserved_slots = models.Slot.objects.filter(date=date, dock=dock)
         slots = []
-        for start in starttimes:
-            slot = [start] + ["Free"]*dock.linecount
+        for i, start in enumerate(starttimes):
+            slot = [start]
+            for line in range(dock.linecount):
+                try:
+                    tag = str(reserved_slots.get(slot=i, line=line))
+                except:
+                    tag = "FREE"
+                slot += [tag]
             slots.append(slot)
         return slots
 

@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.test import TestCase
 from django.apps import apps
 from slots.apps import SlotsConfig
@@ -73,6 +74,23 @@ class DockTests(TestCase):
         self.assertEqual(self.dock.list_slots(1), ['7:30'])
         self.assertEqual(self.dock.list_slots(2), [])
         self.assertEqual(self.dock.list_slots(9), None)
+
+
+class SlotTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        myslots = [['7:00', '8:00', '9:00'], ['7:30'], [], [], [], [], []]
+        cls.now = datetime.strptime('2018-01-01', '%Y-%m-%d')
+        cls.station = models.Station(company="KRONOS Leverkusen",
+                                     name="TiO2 packed")
+        cls.dl = models.Deadline(name="Default")
+        cls.dock = models.Dock(name="Truck", station=cls.station,
+                               deadline=cls.dl, available_slots=myslots)
+        cls.slot = models.Slot(dock=cls.dock, date=cls.now, slot=1, line=0)
+
+    def test_slot_creation(self):
+        self.assertTrue(isinstance(self.slot, models.Slot))
+        self.assertEqual(self.slot.__str__(), "Truck: 2018-01-01 8:00 (0)")
 
 
 # Test views

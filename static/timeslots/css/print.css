@@ -1,0 +1,13 @@
+.footer, 
+.sidebar,
+form#sidebar,
+.alert,
+.nav,
+div#kronoslogo,
+div.navbar {
+    display: none;
+}
+h1 {font-size: 14px}
+body {font-size: 12px}
+.page-header {margin: 0;}
+

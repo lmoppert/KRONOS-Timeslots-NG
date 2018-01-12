@@ -105,3 +105,18 @@ class Dock(models.Model):
         ordering = ('station', 'name')
         verbose_name = _("Dock")
         verbose_name_plural = _("Docks")
+
+
+class Slot(models.Model):
+    dock = models.ForeignKey(Dock, on_delete=models.CASCADE)
+    date = models.DateField(auto_now=False)
+    slot = models.IntegerField()
+    line = models.IntegerField()
+
+    def __str__(self):
+        start = self.dock.available_slots[self.date.weekday()][self.slot]
+        mydate = self.date.strftime("%Y-%m-%d")
+        return "{}: {} {} ({})".format(self.dock.name, mydate, start, self.line)
+
+    class Meta:
+        ordering = ('dock', 'date', 'slot', 'line')

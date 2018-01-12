@@ -8,18 +8,39 @@
     <meta name="author" content="Lutz Moppert">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>KRONOS - Timeslots</title>
-    <link rel="shortcut icon" type="image/ico" href="{% static
-        "timeslots/img/favicon.ico" %}">
-    <link rel="stylesheet" type="text/css" href="{% static
-        "timeslots/css/base.css" %}">
+    <link rel="shortcut icon" type="image/ico" href="{% static "timeslots/img/favicon.ico" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "timeslots/css/timeslots.css" %}">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css"
           integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
     {% block extra_head %}{% endblock %}
 </head>
 <body>
-    <div id="main" class="container">
-        {% block base_content %}{% endblock %}
+    <div id="header">
+        <nav class="navbar">
+            <a class="navbar-brand" href="/">
+                <img src="{% static "timeslots/img/kronoslogo.png" %}"
+                alt="KRONOS Logo" class="img-fluid">
+            </a>
+        </nav>
     </div>
+    <div id="main">
+        <div class="container">
+            {% block base_content %}{% endblock %}
+        </div>
+    </div>
+    <div id="footer">
+        <div class="content">
+            <ul id="menu" class="menu">
+                <li class="item-115"><a href="http://kronostio2.com/en/important-legal-information">Important Legal Information</a></li>
+                <li class="item-669"><a href="http://kronostio2.com/en/terms-and-conditions">Terms and Conditions of Sale</a></li>
+                <li class="item-116"><a href="http://kronostio2.com/en/privacy-policy">Privacy Policy</a></li>
+            </ul>
+            <br>© 2018 KRONOS Worldwide, Inc. |&nbsp;5430 LBJ Freeway, Suite 1700 |
+            Dallas, TX, 75240 | United States<br>Phone: (972) 233-1700 | Fax: (972) 448-1445 |
+            <a href="mailto:kronos.marketing@kronosww.com">kronos.marketing@kronosww.com</a>
+        </div>
+    </div>
+
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" crossorigin="anonymous"
             integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN">
     </script>
