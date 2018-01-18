@@ -1,0 +1,127 @@
+# German translations for KRONOS Timeslots 
+# Copyright (C) 2018
+# This file is distributed under the same license as the Timeslots package.
+# Lutz Moppert <lutz.moppert@kronosww.com>, 2018
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-01-17 12:25+0000\n"
+"PO-Revision-Date: 2018-01-16 13:37+0000\n"
+"Last-Translator: Lutz Moppert <lutz.moppert@kronosww.com>\n"
+"Language-Team: \n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: slots/models.py:14
+msgid ""
+"Booking deadline = time on the day before from which on a slot can not be "
+"reserved any more. Set this to midnight to turn off this feature completely "
+"for this station"
+msgstr ""
+"Buchungs Deadline = Zeitpunkt am Vortag der Reservierung, ab dem ein Slot "
+"nicht mehr gebucht werden kann. Zum deaktivieren dieser Funktion wird dies "
+"auf Mitternacht gestellt."
+
+#: slots/models.py:22
+msgid ""
+"RVNP = Rien ne vas plus -- time when a slot can not be edited any more, set "
+"to Midnight to have the deadline as RNVP"
+msgstr ""
+"RVNP = Rien ne vas plus -- Zeitpunkt ab dem keine Änderung an einer "
+"Reservierung mehr gemacht werden kann."
+
+#: slots/models.py:40
+msgid "Deadline"
+msgstr "Deadline"
+
+#: slots/models.py:41
+msgid "Deadlines"
+msgstr "Deadlines"
+
+#: slots/models.py:56
+msgid "Station"
+msgstr "Ladestelle"
+
+#: slots/models.py:57
+msgid "Stations"
+msgstr "Ladestellen"
+
+#: slots/models.py:66
+msgid "0 for unlimited"
+msgstr "0 für unbegrenzt"
+
+#: slots/models.py:71
+msgid ""
+"If this option is marked, the reservation form offers the opportunity to add "
+"more than one job"
+msgstr ""
+"Wird diese Option aktiviert, können bei einer Reservierung mehrere Aufträge "
+"angegeben werden."
+
+#: slots/models.py:78
+msgid ""
+"This option adds a Statusbar to the job view, which shows the current "
+"loading status"
+msgstr ""
+"Diese Option fügt einem reservierten Slot einen Statusbalken hinzu, der den "
+"derzeitigen Ladestatus repräsentiert."
+
+#: slots/models.py:85
+msgid ""
+"Choose this option if you want to be able to mark charges with an KLV/NV flag"
+msgstr ""
+"Ist diese Option gesetzt, können Reservierungen mit dem KLV/NV Kennzeichen "
+"markiert werden."
+
+#: slots/models.py:107
+msgid "Dock"
+msgstr "Rampe"
+
+#: slots/models.py:108
+msgid "Docks"
+msgstr "Rampen"
+
+#: slots/models.py:124
+msgid "Slot"
+msgstr "Slot"
+
+#: slots/models.py:125
+msgid "Slots"
+msgstr "Slots"
+
+#: slots/models.py:129
+msgid "viewer"
+msgstr "Zuschauer"
+
+#: slots/models.py:129
+msgid "carrier"
+msgstr "Spediteur"
+
+#: slots/models.py:129
+msgid "charger"
+msgstr "Belader"
+
+#: slots/models.py:130
+msgid "loadmaster"
+msgstr "Lademeister"
+
+#: slots/templates/slots/index.html:4
+msgid "New Timeslots"
+msgstr "Timeslots V2.0"
+
+#: slots/templates/slots/index.html:6
+msgid "Available Stations"
+msgstr "Verfügbare Ladestellen"
+
+#: timeslots/settings.py:124
+msgid "German"
+msgstr "Deutsch"
+
+#: timeslots/settings.py:125
+msgid "English"
+msgstr "Englisch"

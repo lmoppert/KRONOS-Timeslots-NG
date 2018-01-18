@@ -33,10 +33,6 @@ body #footer a:hover, body #main a:hover {
     max-width: 1140px;
     max-height: 50px;
 }
-#header img {
-    height: 30px;
-    margin-bottom: 3px;
-}
 #footer {
     margin: 0;
     position: relative;
@@ -73,10 +69,6 @@ body #footer a:hover, body #main a:hover {
     padding: 0 5px;
 }
 /*
- *
-body {
-    position: relative;
-}
 div.container-fluid { padding-top: 20px; }
 div.container-fluid h1 { 
     font-size: 28px; 

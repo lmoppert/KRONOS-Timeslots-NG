@@ -1,6 +1,7 @@
 # from datetime import timedelta, datetime, time
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.postgres.fields import JSONField
+from django.contrib.auth.models import User
 from django.urls import reverse
 from django.db import models
 
@@ -44,6 +45,21 @@ class Station(models.Model):
     company = models.CharField(max_length=200)
     name = models.CharField(max_length=200)
     description = models.TextField(blank=True)
+
+    @property
+    def viewer(self):
+        return self.role_set.filter(role=1)
+
+    @property
+    def user(self):
+        return self.role_set.filter(role=2)
+
+    @property
+    def charger(self):
+        return self.role_set.filter(role=3)
+
+    def is_loadmaster(self, user):
+        return self.role_set.filter(role=4, user__id=user.id).exists()
 
     def __str__(self):
         return "{} - {}".format(self.company, self.name)
@@ -120,3 +136,13 @@ class Slot(models.Model):
 
     class Meta:
         ordering = ('dock', 'date', 'slot', 'line')
+        verbose_name = _("Slot")
+        verbose_name_plural = _("Slots")
+
+
+class Role(models.Model):
+    ROLES = ((1, _("viewer")), (2, _("carrier")), (3, _("charger")),
+             (4, _("loadmaster")))
+    station = models.ForeignKey(Station, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    role = models.PositiveIntegerField(choices=ROLES, default=2)
