@@ -46,20 +46,12 @@ class Station(models.Model):
     name = models.CharField(max_length=200)
     description = models.TextField(blank=True)
 
-    @property
-    def viewer(self):
-        return self.role_set.filter(role=1)
-
-    @property
-    def user(self):
-        return self.role_set.filter(role=2)
-
-    @property
-    def charger(self):
-        return self.role_set.filter(role=3)
-
-    def is_loadmaster(self, user):
-        return self.role_set.filter(role=4, user__id=user.id).exists()
+    def get_user_role(self, user):
+        qs = self.role_set.filter(user__id=user.id)
+        if qs.exists():
+            return qs.first().role
+        else:
+            return 0
 
     def __str__(self):
         return "{} - {}".format(self.company, self.name)
