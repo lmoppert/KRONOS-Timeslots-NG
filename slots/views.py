@@ -1,5 +1,6 @@
 from datetime import datetime
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
+from django.urls import reverse
 from django.views import generic
 from slots import models
 
@@ -9,7 +10,24 @@ def index(request):
     return render(request, 'slots/index.html', context=context)
 
 
-class StationDetail(generic.DeleteView):
+class StationRedirect(generic.RedirectView):
+    permanent = False
+
+    def get_redirect_url(self, *args, **kwargs):
+        station = get_object_or_404(models.Station, pk=kwargs['pk'])
+        today = datetime.today()
+        if station.has_docks:
+            return reverse('stationdocks', kwargs={
+                'year': today.year,
+                'month': today.month,
+                'day': today.day,
+                'pk': station.pk
+            })
+        else:
+            return reverse('index')
+
+
+class StationDocks(generic.DetailView):
     model = models.Station
     template_name = 'slots/station_detail.html'
 

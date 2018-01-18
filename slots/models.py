@@ -8,21 +8,13 @@ from django.db import models
 
 class Deadline(models.Model):
     name = models.CharField(max_length=50)
-    booking_deadline = models.TimeField(
-        default='00:00:00',
-        help_text=_(
-            "Booking deadline = time on the day before from which on a slot "
-            "can not be reserved any more. Set this to midnight to turn off "
-            "this feature completely for this station"
-        )
-    )
-    rnvp = models.TimeField(
-        default='00:00:00',
-        help_text=_(
-            "RVNP = Rien ne vas plus -- time when a slot can not be edited "
-            "any more, set to Midnight to have the deadline as RNVP"
-        )
-    )
+    booking_deadline = models.TimeField(default='00:00:00', help_text=_(
+        "Booking deadline = time on the day before from which on a slot can "
+        "not be reserved any more. Set this to midnight to turn off this "
+        "feature completely for this station"))
+    rnvp = models.TimeField(default='00:00:00', help_text=_(
+        "RVNP = Rien ne vas plus -- time when a slot can not be edited any "
+        "more, set to Midnight to have the deadline as RNVP"))
 
     # def past_deadline(self, curr_date, curr_time):
     #     my_dl = self.booking_deadline
@@ -53,6 +45,14 @@ class Station(models.Model):
         else:
             return 0
 
+    @property
+    def has_docks(self):
+        return self.docks.all().exists()
+
+    # @property
+    # def has_silos(self):
+    #     return self.silos.all().exists()
+
     def __str__(self):
         return "{} - {}".format(self.company, self.name)
 
@@ -68,31 +68,21 @@ class Dock(models.Model):
     name = models.CharField(max_length=200)
     station = models.ForeignKey(Station, on_delete=models.CASCADE,
                                 related_name='docks')
-    linecount = models.IntegerField(default=1)
+    linecount = models.PositiveIntegerField(default=1)
+    # slotlength = models.PositiveIntegerField(default=60)
+    max_slots = models.PositiveIntegerField(default=0,
+                                            help_text=_("0 for unlimited"))
     available_slots = JSONField(default=[[], [], [], [], [], [], []])
-    max_slots = models.IntegerField(default=0, help_text=_("0 for unlimited"))
     deadline = models.ForeignKey(Deadline, default=1, on_delete=models.CASCADE)
-    multiple_charges = models.BooleanField(
-        default=True,
-        help_text=_(
-            "If this option is marked, the reservation form offers the "
-            "opportunity to add more than one job"
-        )
-    )
-    has_status = models.BooleanField(
-        default=False,
-        help_text=_(
-            "This option adds a Statusbar to the job view, which shows the "
-            "current loading status"
-        )
-    )
-    has_klv = models.BooleanField(
-        default=False,
-        help_text=_(
-            "Choose this option if you want to be able to mark charges with "
-            "an KLV/NV flag"
-        )
-    )
+    multiple_charges = models.BooleanField(default=True, help_text=_(
+        "If this option is marked, the reservation form offers the opportunity "
+        "to add more than one job"))
+    has_status = models.BooleanField(default=False, help_text=_(
+        "This option adds a Statusbar to the job view, which shows the current "
+        "loading status"))
+    has_klv = models.BooleanField(default=False, help_text=_(
+        "Choose this option if you want to be able to mark charges with an "
+        "KLV/NV flag"))
 
     def has_slots(self, weekday=0):
         if 0 <= weekday <= 6:
@@ -115,6 +105,12 @@ class Dock(models.Model):
         verbose_name_plural = _("Docks")
 
 
+# class Silo(models.Model):
+#     name = models.CharField(max_length=200)
+#     station = models.ForeignKey(Station, on_delete=models.CASCADE,
+#                                 related_name='silos')
+
+
 class Slot(models.Model):
     dock = models.ForeignKey(Dock, on_delete=models.CASCADE)
     date = models.DateField(auto_now=False)
@@ -133,8 +129,13 @@ class Slot(models.Model):
 
 
 class Role(models.Model):
-    ROLES = ((1, _("viewer")), (2, _("carrier")), (3, _("charger")),
+    ROLES = ((1, _("carrier")), (2, _("viewer")), (3, _("charger")),
              (4, _("loadmaster")))
     station = models.ForeignKey(Station, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     role = models.PositiveIntegerField(choices=ROLES, default=2)
+
+    class Meta:
+        verbose_name = _("Role")
+        verbose_name_plural = _("Roles")
+        unique_together = ("user", "station")
