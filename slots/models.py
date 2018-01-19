@@ -34,7 +34,7 @@ class Deadline(models.Model):
 
 
 class Station(models.Model):
-    company = models.CharField(max_length=200)
+    location = models.CharField(max_length=200)
     name = models.CharField(max_length=200)
     description = models.TextField(blank=True)
 
@@ -54,7 +54,7 @@ class Station(models.Model):
     #     return self.silos.all().exists()
 
     def __str__(self):
-        return "{} - {}".format(self.company, self.name)
+        return "{} - {}".format(self.location, self.name)
 
     def get_absolute_url(self):
         return reverse('station', args=[str(self.id)])
@@ -68,9 +68,9 @@ class Dock(models.Model):
     name = models.CharField(max_length=200)
     station = models.ForeignKey(Station, on_delete=models.CASCADE,
                                 related_name='docks')
-    linecount = models.PositiveIntegerField(default=1)
-    # slotlength = models.PositiveIntegerField(default=60)
-    max_slots = models.PositiveIntegerField(default=0,
+    linecount = models.PositiveSmallIntegerField(default=1)
+    # slotlength = models.PositiveSmallIntegerField(default=60)
+    max_slots = models.PositiveSmallIntegerField(default=0,
                                             help_text=_("0 for unlimited"))
     available_slots = JSONField(default=[[], [], [], [], [], [], []])
     deadline = models.ForeignKey(Deadline, default=1, on_delete=models.CASCADE)
@@ -113,9 +113,21 @@ class Dock(models.Model):
 
 class Slot(models.Model):
     dock = models.ForeignKey(Dock, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.PROTECT, default=1)
     date = models.DateField(auto_now=False)
     slot = models.IntegerField()
     line = models.IntegerField()
+    progress = models.PositiveSmallIntegerField(default=0)
+    is_klv = models.BooleanField(default=False)
+    is_blocked = models.BooleanField(default=False)
+    created = models.DateTimeField(auto_now_add=True)
+
+    def get_absolute_url(self):
+        args = {'station': self.dock.station.pk, 'dock': self.dock.pk,
+                'line': self.line, 'year': self.date.year,
+                'month': self.date.month, 'day': self.date.day,
+                }
+        return reverse('dockslot', kwargs=args)
 
     def __str__(self):
         start = self.dock.available_slots[self.date.weekday()][self.slot]
@@ -128,12 +140,55 @@ class Slot(models.Model):
         verbose_name_plural = _("Slots")
 
 
+class Job(models.Model):
+    PAYLOADS = [(x + 1, "{} t".format(x+1)) for x in range(40)]
+    slot =  models.ForeignKey(Slot, on_delete=models.CASCADE)
+    number = models.CharField(max_length=25)
+    payload = models.PositiveSmallIntegerField(default=25, choices=PAYLOADS)
+    description = models.CharField(max_length=200, blank=True)
+
+    class Meta:
+        verbose_name = _("Job")
+        verbose_name_plural = _("Jobs")
+
+
+class Company(models.Model):
+    shortname = models.CharField(max_length=20, blank=True)
+    name = models.CharField(max_length=200)
+    contact = models.TextField(blank=True)
+
+    def __str__(self):
+        if len(self.shortname) > 1:
+            return "{} ({})".format(self.name, self.shortname)
+        else:
+            return self.name
+
+    class Meta:
+        verbose_name = _("Company")
+        verbose_name_plural = _("Companies")
+
+
+class UserCompany(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE)
+
+    def __str__(self):
+        if len(self.company.shortname) > 1:
+            return self.company.shortname
+        else:
+            return self.company.name
+
+    class Meta:
+        verbose_name = _("User Company")
+        verbose_name_plural = _("User Companies")
+
+
 class Role(models.Model):
     ROLES = ((1, _("carrier")), (2, _("viewer")), (3, _("charger")),
              (4, _("loadmaster")))
     station = models.ForeignKey(Station, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    role = models.PositiveIntegerField(choices=ROLES, default=2)
+    role = models.PositiveSmallIntegerField(choices=ROLES, default=2)
 
     class Meta:
         verbose_name = _("Role")

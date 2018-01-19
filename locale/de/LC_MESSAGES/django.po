@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-18 11:03+0000\n"
+"POT-Creation-Date: 2018-01-19 14:45+0000\n"
 "PO-Revision-Date: 2018-01-16 13:37+0000\n"
 "Last-Translator: Lutz Moppert <lutz.moppert@kronosww.com>\n"
 "Language-Team: \n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: slots/models.py:14
+#: slots/models.py:12
 msgid ""
 "Booking deadline = time on the day before from which on a slot can not be "
 "reserved any more. Set this to midnight to turn off this feature completely "
@@ -27,7 +27,7 @@ msgstr ""
 "nicht mehr gebucht werden kann. Zum deaktivieren dieser Funktion wird dies "
 "auf Mitternacht gestellt."
 
-#: slots/models.py:22
+#: slots/models.py:16
 msgid ""
 "RVNP = Rien ne vas plus -- time when a slot can not be edited any more, set "
 "to Midnight to have the deadline as RNVP"
@@ -35,11 +35,11 @@ msgstr ""
 "RVNP = Rien ne vas plus -- Zeitpunkt ab dem keine Änderung an einer "
 "Reservierung mehr gemacht werden kann."
 
-#: slots/models.py:40
+#: slots/models.py:32
 msgid "Deadline"
 msgstr "Deadline"
 
-#: slots/models.py:41
+#: slots/models.py:33
 msgid "Deadlines"
 msgstr "Deadlines"
 
@@ -51,7 +51,7 @@ msgstr "Ladestelle"
 msgid "Stations"
 msgstr "Ladestellen"
 
-#: slots/models.py:73
+#: slots/models.py:74
 msgid "0 for unlimited"
 msgstr "0 für unbegrenzt"
 
@@ -63,7 +63,7 @@ msgstr ""
 "Wird diese Option aktiviert, können bei einer Reservierung mehrere Aufträge "
 "angegeben werden."
 
-#: slots/models.py:85
+#: slots/models.py:81
 msgid ""
 "This option adds a Statusbar to the job view, which shows the current "
 "loading status"
@@ -71,60 +71,96 @@ msgstr ""
 "Diese Option fügt einem reservierten Slot einen Statusbalken hinzu, der den "
 "derzeitigen Ladestatus repräsentiert."
 
-#: slots/models.py:92
+#: slots/models.py:84
 msgid ""
 "Choose this option if you want to be able to mark charges with an KLV/NV flag"
 msgstr ""
 "Ist diese Option gesetzt, können Reservierungen mit dem KLV/NV Kennzeichen "
 "markiert werden."
 
-#: slots/models.py:114
+#: slots/models.py:104
 msgid "Dock"
 msgstr "Rampe"
 
-#: slots/models.py:115
+#: slots/models.py:105
 msgid "Docks"
 msgstr "Rampen"
 
-#: slots/models.py:131
+#: slots/models.py:139
 msgid "Slot"
 msgstr "Slot"
 
-#: slots/models.py:132
+#: slots/models.py:140
 msgid "Slots"
 msgstr "Slots"
 
-#: slots/models.py:136
-msgid "viewer"
-msgstr "Zuschauer"
+#: slots/models.py:151
+msgid "Job"
+msgstr "Auftrag"
 
-#: slots/models.py:136
+#: slots/models.py:152
+msgid "Jobs"
+msgstr "Aufträge"
+
+#: slots/models.py:167
+msgid "Company"
+msgstr "Firma"
+
+#: slots/models.py:168
+msgid "Companies"
+msgstr "Firmen"
+
+#: slots/models.py:182
+msgid "User Company"
+msgstr "Firmenzugrhörigkeit"
+
+#: slots/models.py:183
+msgid "User Companies"
+msgstr "Firmenzugrhörigkeiten"
+
+#: slots/models.py:187
 msgid "carrier"
 msgstr "Spediteur"
 
-#: slots/models.py:136
+#: slots/models.py:187
+msgid "viewer"
+msgstr "Zuschauer"
+
+#: slots/models.py:187
 msgid "charger"
 msgstr "Belader"
 
-#: slots/models.py:137
+#: slots/models.py:188
 msgid "loadmaster"
 msgstr "Lademeister"
 
-#: slots/models.py:143
+#: slots/models.py:194
 msgid "Role"
 msgstr "Rolle"
 
-#: slots/models.py:144
+#: slots/models.py:195
 msgid "Roles"
 msgstr "Rollen"
 
-#: slots/templates/slots/index.html:6
+#: slots/templates/slots/index.html:5
 msgid "New Timeslots"
 msgstr "Timeslots V2.0"
 
 #: slots/templates/slots/index.html:8
 msgid "Available Stations"
 msgstr "Verfügbare Ladestellen"
+
+#: slots/views.py:53
+msgid "Free"
+msgstr "Frei"
+
+#: templates/registration/login.html:6
+msgid "KRONOS-Timeslots Login"
+msgstr "KRONOS-Timeslots Anmeldung"
+
+#: templates/registration/login.html:11
+msgid "Login"
+msgstr "Anmelden"
 
 #: timeslots/settings.py:124
 msgid "German"

@@ -9,6 +9,15 @@ class RoleInline(admin.TabularInline):
     extra = 1
 
 
+class CompanyInline(admin.TabularInline):
+    model = models.UserCompany
+
+
+@admin.register(models.Company)
+class CompanyAdmin(admin.ModelAdmin):
+    model = models.Company
+
+
 @admin.register(models.Deadline)
 class DeadlineAdmin(admin.ModelAdmin):
     model = models.Deadline
@@ -18,7 +27,7 @@ class DeadlineAdmin(admin.ModelAdmin):
 @admin.register(models.Station)
 class StationAdmin(admin.ModelAdmin):
     model = models.Station
-    list_display = ('company', 'name')
+    list_display = ('location', 'name')
     inlines = [RoleInline, ]
 
 
@@ -40,4 +49,4 @@ admin.site.unregister(User)
 
 @admin.register(User)
 class UserAdmin(AuthUserAdmin):
-    inlines = [RoleInline, ]
+    inlines = [RoleInline, CompanyInline]

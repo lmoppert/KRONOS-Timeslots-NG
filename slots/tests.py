@@ -21,45 +21,54 @@ class HelperScriptsTest(TestCase):
 
 
 # Test models
-class StationTests(TestCase):
+class ModelsTest(TestCase):
     @classmethod
     def setUpTestData(cls):
-        cls.station = models.Station(company="KRONOS Leverkusen",
-                                     name="TiO2 packed")
+        cls.station = models.Station(location="Leverkusen", name="packed")
         cls.station.save()
         cls.dl = models.Deadline(name="Default")
         cls.dl.save()
+        myslots = [['7:00', '8:00', '9:00'], ['7:30'], [], [], [], [], []]
         cls.dock = models.Dock(name="Truck", station=cls.station,
-                               deadline=cls.dl)
+                               deadline=cls.dl, available_slots=myslots)
         cls.dock.save()
+        mydate = datetime.strptime('2018-01-01', '%Y-%m-%d')
+        cls.tgl = models.Company(name="KRONOS LEV", shortname="TGL")
+        cls.tgl.save()
+        cls.company = models.Company(name="MyCompany")
+        cls.company.save()
+        cls.carrier = models.User(username='carrier', password='pass')
+        cls.carrier.save()
+        models.UserCompany(user=cls.carrier, company=cls.company).save()
+        cls.master = models.User(username='master', password='pass')
+        cls.master.save()
+        models.UserCompany(user=cls.master, company=cls.tgl).save()
+        cls.dummy = models.User(username='dummy', password='pass')
+        cls.dummy.save()
+        models.UserCompany(user=cls.dummy, company=cls.company).save()
+        cls.slot = models.Slot(dock=cls.dock, date=mydate, slot=1, line=0,
+                               user=cls.carrier)
+        cls.slot.save()
+        models.Role(station=cls.station, user=cls.carrier, role=1).save()
+        models.Role(station=cls.station, user=cls.master, role=4).save()
 
+    # Station tests
     def test_station_creation(self):
         self.assertTrue(isinstance(self.station, models.Station))
         self.assertEqual(self.station.__str__(), "{} - {}".format(
-            self.station.company, self.station.name))
-        self.assertEqual(self.station.id, 1)
+            self.station.location, self.station.name))
+        self.assertEqual(self.station.pk, 1)
+
+    def test_station_ablosute_url(self):
         self.assertEqual(self.station.get_absolute_url(),
-                         '/{}'.format(self.station.id))
+                         '/{}'.format(self.station.pk))
 
     def test_deadline_creation(self):
         self.assertTrue(isinstance(self.dl, models.Deadline))
         self.assertEqual(self.dl.__str__(), "{} ({} / {})".format(
             self.dl.name, self.dl.booking_deadline, self.dl.rnvp))
 
-    def test_dock_creation(self):
-        self.assertTrue(isinstance(self.dock, models.Dock))
-
-
-class DockTests(TestCase):
-    @classmethod
-    def setUpTestData(cls):
-        myslots = [['7:00', '8:00', '9:00'], ['7:30'], [], [], [], [], []]
-        cls.station = models.Station(company="KRONOS Leverkusen",
-                                     name="TiO2 packed")
-        cls.dl = models.Deadline(name="Default")
-        cls.dock = models.Dock(name="Truck", station=cls.station,
-                               deadline=cls.dl, available_slots=myslots)
-
+    # Dock tests
     def test_dock_creation(self):
         self.assertTrue(isinstance(self.dock, models.Dock))
         self.assertEqual(self.dock.__str__(), "{} - {}".format(
@@ -75,30 +84,49 @@ class DockTests(TestCase):
         self.assertEqual(self.dock.list_slots(2), [])
         self.assertEqual(self.dock.list_slots(9), None)
 
-
-class SlotTest(TestCase):
-    @classmethod
-    def setUpTestData(cls):
-        myslots = [['7:00', '8:00', '9:00'], ['7:30'], [], [], [], [], []]
-        cls.now = datetime.strptime('2018-01-01', '%Y-%m-%d')
-        cls.station = models.Station(company="KRONOS Leverkusen",
-                                     name="TiO2 packed")
-        cls.dl = models.Deadline(name="Default")
-        cls.dock = models.Dock(name="Truck", station=cls.station,
-                               deadline=cls.dl, available_slots=myslots)
-        cls.slot = models.Slot(dock=cls.dock, date=cls.now, slot=1, line=0)
-
+    # Slot tests
     def test_slot_creation(self):
         self.assertTrue(isinstance(self.slot, models.Slot))
         self.assertEqual(self.slot.__str__(), "Truck: 2018-01-01 8:00 (0)")
+
+    def test_slot_ablosute_url(self):
+        url = '/slot/{}/{}/{}/date/2018/1/1'.format(
+            self.station.pk, self.dock.pk, self.slot.line)
+        self.assertEqual(self.slot.get_absolute_url(), url)
+
+    # Company tests
+    def test_company_creation(self):
+        self.assertTrue(isinstance(self.company, models.Company))
+        self.assertEqual(self.company.__str__(), "MyCompany")
+
+    def test_company_names(self):
+        self.assertEqual(self.tgl.__str__(), "KRONOS LEV (TGL)")
+        self.assertEqual(self.tgl.usercompany_set.first().__str__(), "TGL")
+
+    # User access tests
+    def test_carrier(self):
+        self.assertTrue(isinstance(self.carrier, models.User))
+        self.assertEqual(self.station.get_user_role(self.carrier), 1)
+
+    def test_master(self):
+        self.assertTrue(isinstance(self.carrier, models.User))
+        self.assertEqual(self.station.get_user_role(self.master), 4)
+
+    def test_dummy(self):
+        self.assertTrue(isinstance(self.carrier, models.User))
+        self.assertEqual(self.station.get_user_role(self.dummy), 0)
 
 
 # Test views
 class ViewsTests(TestCase):
     @classmethod
     def setUpTestData(cls):
-        cls.station = models.Station(company="KRONOS Leverkusen",
-                                     name="TiO2 packed")
+        from django.test import Client
+
+        cls.c = Client()
+        cls.empty = models.Station(location="Empty", name="Station")
+        cls.empty.save()
+        cls.station = models.Station(location="Leverkusen", name="packed")
         cls.station.save()
         cls.dl = models.Deadline(name="Default")
         cls.dl.save()
@@ -106,16 +134,51 @@ class ViewsTests(TestCase):
         cls.dock = models.Dock(name="Truck", station=cls.station,
                                deadline=cls.dl, available_slots=myslots)
         cls.dock.save()
-        from django.test import Client
-        cls.c = Client()
+        cls.today = datetime.today()
+        cls.company = models.Company(name="MyCompany")
+        cls.company.save()
+        cls.carrier = models.User(username='carrier')
+        cls.carrier.set_password("cpass")
+        cls.carrier.save()
+        models.UserCompany(user=cls.carrier, company=cls.company).save()
+        cls.master = models.User(username='master')
+        cls.master.set_password("mpass")
+        cls.master.save()
+        models.UserCompany(user=cls.master, company=cls.company).save()
+        cls.dummy = models.User(username='dummy')
+        cls.dummy.set_password("dpass")
+        cls.dummy.save()
+        models.UserCompany(user=cls.dummy, company=cls.company).save()
+        mydate = datetime.strptime('2018-01-01', '%Y-%m-%d')
+        cls.slot = models.Slot(dock=cls.dock, date=mydate, slot=1, line=0,
+                               user=cls.carrier)
+        cls.slot.save()
 
     def test_index(self):
         res = self.c.get('/')
         self.assertContains(res, 'Timeslots', 3)
 
-    def test_station(self):
-        res = self.c.get('/{}'.format(self.station.id))
-        self.assertContains(res, 'KRONOS Leverkusen')
-        self.assertContains(res, 'Truck')
-        res = self.c.get('/{}/date/2018/1/2'.format(self.station.id))
+    def test_auth_redirect(self):
+        url = '/docks/{}/date/2018/1/2'.format(self.station.pk)
+        res = self.c.get(url)
+        self.assertRedirects(res, '/accounts/login/?next={}'.format(url))
+        self.assertTrue(self.c.login(username='master', password='mpass'))
+
+    def test_station_redirects(self):
+        logged_in = self.c.login(username='master', password='mpass')
+        res = self.c.get('/{}'.format(self.station.pk))
+        self.assertRedirects(res, '/docks/{}/date/{}/{}/{}'.format(
+            self.station.pk, self.today.year, self.today.month, self.today.day))
+        res = self.c.get('/{}'.format(self.empty.pk))
+        self.assertRedirects(res, '/')
+
+    def test_station_by_date(self):
+        logged_in = self.c.login(username='master', password='mpass')
+        res = self.c.get('/docks/{}/date/2018/1/2'.format(self.station.pk))
         self.assertContains(res, '7:30')
+
+    def test_slot_in_table(self):
+        logged_in = self.c.login(username='master', password='mpass')
+        res = self.c.get('/docks/{}/date/2018/1/1'.format(self.station.pk))
+        self.assertContains(res, 'MyCompany')
+
