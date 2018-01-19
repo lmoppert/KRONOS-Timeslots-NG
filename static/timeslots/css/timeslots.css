@@ -24,6 +24,9 @@ body #main h2 {
     font-size: 20px;
     font-weight: bold;
 }
+body #main .slot-tables td a {
+    font-weight: 600;
+}
 body #footer a, body #main a {
     color: #0e509c;
 }
@@ -77,14 +80,10 @@ body #footer a:hover, body #main a:hover {
     border-left: 1px solid #0e509c;
     padding: 0 5px;
 }
-
-#login-form {
-    min-height: 300px;
-}
 form#login label,
 form#login button  {
     display: block;
-    margin-top: 25px;
+    margin: 25px 0;
 }
 form#login input {
     display: block;

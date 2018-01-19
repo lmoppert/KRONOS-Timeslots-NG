@@ -42,15 +42,17 @@ class StationDocks(LoginRequiredMixin, generic.DetailView):
                 if qs.exists():
                     obj = qs.first()
                     url = obj.get_absolute_url()
-                    res = obj.user.usercompany
-                    tag = mark_safe("<a href='{}'>{}</a>".format(url, res))
+                    res = "{} - {}".format(obj.user.usercompany,
+                                           obj.job_set.first())
+                    anchor = "<a href='{}' class='text-info'>{}</a>"
+                    tag = mark_safe(anchor.format(url, res))
                 else:
                     args = {'station': dock.station.pk, 'dock': dock.pk,
                             'line': line, 'year': date.year, 'day': date.day,
                             'month': date.month, }
                     url = reverse('dockslot', kwargs=args)
-                    tag = mark_safe("<a href='{}' class='Free'>{}</a>".format(
-                        url, _("Free")))
+                    anchor = "<a href='{}' class='text-success'>{}</a>"
+                    tag = mark_safe(anchor.format(url, _("Free")))
                 slot += [tag]
             slots.append(slot)
         return slots

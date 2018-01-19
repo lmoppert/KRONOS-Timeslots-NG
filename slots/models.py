@@ -147,6 +147,9 @@ class Job(models.Model):
     payload = models.PositiveSmallIntegerField(default=25, choices=PAYLOADS)
     description = models.CharField(max_length=200, blank=True)
 
+    def __str__(self):
+        return self.number
+
     class Meta:
         verbose_name = _("Job")
         verbose_name_plural = _("Jobs")

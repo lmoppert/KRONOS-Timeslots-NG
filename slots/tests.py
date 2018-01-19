@@ -49,6 +49,8 @@ class ModelsTest(TestCase):
         cls.slot = models.Slot(dock=cls.dock, date=mydate, slot=1, line=0,
                                user=cls.carrier)
         cls.slot.save()
+        cls.job = models.Job(number="4711", slot=cls.slot)
+        cls.job.save()
         models.Role(station=cls.station, user=cls.carrier, role=1).save()
         models.Role(station=cls.station, user=cls.master, role=4).save()
 
@@ -93,6 +95,11 @@ class ModelsTest(TestCase):
         url = '/slot/{}/{}/{}/date/2018/1/1'.format(
             self.station.pk, self.dock.pk, self.slot.line)
         self.assertEqual(self.slot.get_absolute_url(), url)
+
+    # Job tests
+    def test_job_creation(self):
+        self.assertTrue(isinstance(self.job, models.Job))
+        self.assertEqual(self.job.__str__(), "4711")
 
     # Company tests
     def test_company_creation(self):
@@ -153,6 +160,8 @@ class ViewsTests(TestCase):
         cls.slot = models.Slot(dock=cls.dock, date=mydate, slot=1, line=0,
                                user=cls.carrier)
         cls.slot.save()
+        cls.job = models.Job(number="4711", slot=cls.slot)
+        cls.job.save()
 
     def test_index(self):
         res = self.c.get('/')
@@ -180,5 +189,5 @@ class ViewsTests(TestCase):
     def test_slot_in_table(self):
         logged_in = self.c.login(username='master', password='mpass')
         res = self.c.get('/docks/{}/date/2018/1/1'.format(self.station.pk))
-        self.assertContains(res, 'MyCompany')
+        self.assertContains(res, 'MyCompany - 4711')
 

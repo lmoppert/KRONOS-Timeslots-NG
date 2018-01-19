@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-19 14:45+0000\n"
+"POT-Creation-Date: 2018-01-19 15:30+0000\n"
 "PO-Revision-Date: 2018-01-16 13:37+0000\n"
 "Last-Translator: Lutz Moppert <lutz.moppert@kronosww.com>\n"
 "Language-Team: \n"
@@ -94,51 +94,51 @@ msgstr "Slot"
 msgid "Slots"
 msgstr "Slots"
 
-#: slots/models.py:151
+#: slots/models.py:154
 msgid "Job"
 msgstr "Auftrag"
 
-#: slots/models.py:152
+#: slots/models.py:155
 msgid "Jobs"
 msgstr "Aufträge"
 
-#: slots/models.py:167
+#: slots/models.py:170
 msgid "Company"
 msgstr "Firma"
 
-#: slots/models.py:168
+#: slots/models.py:171
 msgid "Companies"
 msgstr "Firmen"
 
-#: slots/models.py:182
+#: slots/models.py:185
 msgid "User Company"
 msgstr "Firmenzugrhörigkeit"
 
-#: slots/models.py:183
+#: slots/models.py:186
 msgid "User Companies"
 msgstr "Firmenzugrhörigkeiten"
 
-#: slots/models.py:187
+#: slots/models.py:190
 msgid "carrier"
 msgstr "Spediteur"
 
-#: slots/models.py:187
+#: slots/models.py:190
 msgid "viewer"
 msgstr "Zuschauer"
 
-#: slots/models.py:187
+#: slots/models.py:190
 msgid "charger"
 msgstr "Belader"
 
-#: slots/models.py:188
+#: slots/models.py:191
 msgid "loadmaster"
 msgstr "Lademeister"
 
-#: slots/models.py:194
+#: slots/models.py:197
 msgid "Role"
 msgstr "Rolle"
 
-#: slots/models.py:195
+#: slots/models.py:198
 msgid "Roles"
 msgstr "Rollen"
 
@@ -150,7 +150,7 @@ msgstr "Timeslots V2.0"
 msgid "Available Stations"
 msgstr "Verfügbare Ladestellen"
 
-#: slots/views.py:53
+#: slots/views.py:55
 msgid "Free"
 msgstr "Frei"
 
