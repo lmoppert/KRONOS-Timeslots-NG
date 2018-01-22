@@ -46,7 +46,7 @@ class ModelsTest(TestCase):
         cls.dummy = models.User(username='dummy', password='pass')
         cls.dummy.save()
         models.UserCompany(user=cls.dummy, company=cls.company).save()
-        cls.slot = models.Slot(dock=cls.dock, date=mydate, slot=1, line=0,
+        cls.slot = models.Slot(dock=cls.dock, date=mydate, index=1, line=0,
                                user=cls.carrier)
         cls.slot.save()
         cls.job = models.Job(number="4711", slot=cls.slot)
@@ -156,8 +156,8 @@ class ViewsTests(TestCase):
         cls.dummy.save()
         models.UserCompany(user=cls.dummy, company=cls.company).save()
         cls.slotdate = datetime.strptime('2018-01-01', '%Y-%m-%d')
-        cls.slot = models.Slot(dock=cls.dock, date=cls.slotdate, slot=1, line=0,
-                               user=cls.carrier)
+        cls.slot = models.Slot(dock=cls.dock, date=cls.slotdate, index=1,
+                               line=0, user=cls.carrier)
         cls.slot.save()
         cls.job = models.Job(number="4711", slot=cls.slot)
         cls.job.save()
@@ -173,7 +173,7 @@ class ViewsTests(TestCase):
         self.assertTrue(self.c.login(username='master', password='mpass'))
 
     def test_station_redirects(self):
-        logged_in = self.c.login(username='master', password='mpass')
+        self.c.login(username='master', password='mpass')
         res = self.c.get('/{}'.format(self.station.pk))
         self.assertRedirects(res, '/docks/{}/date/{}/{}/{}'.format(
             self.station.pk, self.today.year, self.today.month, self.today.day))
@@ -181,23 +181,26 @@ class ViewsTests(TestCase):
         self.assertRedirects(res, '/')
 
     def test_station_by_date(self):
-        logged_in = self.c.login(username='master', password='mpass')
+        self.c.login(username='master', password='mpass')
         res = self.c.get('/docks/{}/date/2018/1/2'.format(self.station.pk))
         self.assertContains(res, '7:30')
 
     def test_slot_in_table(self):
-        logged_in = self.c.login(username='master', password='mpass')
+        self.c.login(username='master', password='mpass')
         res = self.c.get('/docks/{}/date/2018/1/1'.format(self.station.pk))
         self.assertContains(res, 'MyCompany - 4711')
 
     def test_slot_redirect(self):
-        logged_in = self.c.login(username='carrier', password='cpass')
+        self.c.login(username='carrier', password='cpass')
         url = '/slot/{}/{}/{}/date/{}'.format(
-            self.slot.dock.pk, self.slot.slot, self.slot.line,
+            self.slot.dock.pk, self.slot.index, self.slot.line,
             self.slotdate.strftime('%Y/%m/%d'))
         res = self.c.get(url)
         self.assertRedirects(res, '/slot/{}'.format(self.slot.pk))
-        url += "3"
+
+    def test_slot_redirect_new(self):
+        self.c.login(username='carrier', password='cpass')
+        url = '/slot/{}/0/0/date/2018/1/9'.format(self.slot.dock.pk)
         res = self.c.get(url)
         slot = models.Slot.objects.last()
         self.assertRedirects(res, '/newslot/{}'.format(slot.pk))

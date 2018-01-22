@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block base_content %}
+<h1>
+    {% trans "Reservation for" %}
+    {{ object.date }}
+</h1>
+<table class="table table-striped table-bordered table-hover table-sm">
+    <tr>
+        <th>{% trans "Dock" %}</th>
+        <td>{{ object.dock }}</td>
+    </tr><tr>
+        <th>{% trans "Timeslot" %}</th>
+        <td>{{ object.date }}: {{ object.get_start }}</td>
+    </tr><tr>
+        <th>{% trans "User" %}</th>
+        <td>{{ object.user }} ({{ object.user.usercompany }})</td>
+    </tr><tr>
+        <th>{% trans "Created" %}</th>
+        <td>{{ object.created }}</td>
+    </tr>
+</table>
+
+{% endblock %}
+<!-- vim:syntax=htmldjango
+-->

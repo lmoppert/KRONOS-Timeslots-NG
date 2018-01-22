@@ -38,7 +38,7 @@ class StationDocks(LoginRequiredMixin, generic.DetailView):
         for i, start in enumerate(starttimes):
             slot = [start]
             for line in range(dock.linecount):
-                qs = reserved_slots.filter(slot=i, line=line)
+                qs = reserved_slots.filter(index=i, line=line)
                 if qs.exists():
                     obj = qs.first()
                     url = obj.get_absolute_url()
@@ -47,7 +47,7 @@ class StationDocks(LoginRequiredMixin, generic.DetailView):
                     anchor = "<a href='{}' class='text-info'>{}</a>"
                     tag = mark_safe(anchor.format(url, res))
                 else:
-                    args = {'dock': dock.pk, 'slot': i, 'line': line,
+                    args = {'dock': dock.pk, 'index': i, 'line': line,
                             'year': date.year, 'month': date.month,
                             'day': date.day}
                     url = reverse('getslot', kwargs=args)
@@ -80,13 +80,14 @@ class SlotRedirect(LoginRequiredMixin, generic.RedirectView):
         )
         dock = get_object_or_404(models.Dock, pk=kwargs['dock'])
         slot, created = models.Slot.objects.get_or_create(
-            dock=dock, date=slotdate, slot=kwargs['slot'], line=kwargs['line'])
+            dock=dock, date=slotdate, index=kwargs['index'],
+            line=kwargs['line'])
         if created:
             slot.user = self.request.user
             slot.save()
-            return reverse('newslot', kwargs={'pk': slot.pk,  })
+            return reverse('newslot', kwargs={'pk': slot.pk})
         else:
-            return reverse('slotdetail', kwargs={'pk': slot.pk, })
+            return reverse('slotdetail', kwargs={'pk': slot.pk})
 
 
 class SlotDetail(generic.DetailView):

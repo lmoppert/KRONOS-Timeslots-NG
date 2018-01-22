@@ -10,7 +10,7 @@ urlpatterns = [
     path('<int:pk>', views.StationRedirect.as_view(), name='station'),
     path('docks/<int:pk>'+datematch,
          views.StationDocks.as_view(), name='stationdocks'),
-    path('slot/<int:dock>/<int:slot>/<int:line>'+datematch,
+    path('slot/<int:dock>/<int:index>/<int:line>'+datematch,
          views.SlotRedirect.as_view(), name='getslot'),
     path('slot/<int:pk>', views.SlotDetail.as_view(), name='slotdetail'),
     path('newslot/<int:pk>', views.SlotDetail.as_view(), name='newslot'),

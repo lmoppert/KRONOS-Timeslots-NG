@@ -1,4 +1,5 @@
 # from datetime import timedelta, datetime, time
+from datetime import time
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.postgres.fields import JSONField
 from django.contrib.auth.models import User
@@ -70,8 +71,8 @@ class Dock(models.Model):
                                 related_name='docks')
     linecount = models.PositiveSmallIntegerField(default=1)
     # slotlength = models.PositiveSmallIntegerField(default=60)
-    max_slots = models.PositiveSmallIntegerField(default=0,
-                                            help_text=_("0 for unlimited"))
+    max_slots = models.PositiveSmallIntegerField(
+        default=0, help_text=_("0 for unlimited"))
     available_slots = JSONField(default=[[], [], [], [], [], [], []])
     deadline = models.ForeignKey(Deadline, default=1, on_delete=models.CASCADE)
     multiple_charges = models.BooleanField(default=True, help_text=_(
@@ -105,40 +106,40 @@ class Dock(models.Model):
         verbose_name_plural = _("Docks")
 
 
-# class Silo(models.Model):
-#     name = models.CharField(max_length=200)
-#     station = models.ForeignKey(Station, on_delete=models.CASCADE,
-#                                 related_name='silos')
-
-
 class Slot(models.Model):
     user = models.ForeignKey(User, on_delete=models.PROTECT, default=1)
     dock = models.ForeignKey(Dock, on_delete=models.CASCADE)
     date = models.DateField(auto_now=False)
-    slot = models.IntegerField()
+    index = models.IntegerField()
     line = models.IntegerField()
     progress = models.PositiveSmallIntegerField(default=0)
     is_klv = models.BooleanField(default=False)
     is_blocked = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
 
+    def get_start(self):
+        start = self.dock.available_slots[self.date.weekday()][self.index]
+        hour, minute = start.split(":")
+        starttime = time(hour=int(hour), minute=int(minute))
+        return starttime
+
     def get_absolute_url(self):
         return reverse('slotdetail', args=[str(self.pk)])
 
     def __str__(self):
-        start = self.dock.available_slots[self.date.weekday()][self.slot]
+        start = self.dock.available_slots[self.date.weekday()][self.index]
         mydate = self.date.strftime("%Y-%m-%d")
         return "{}: {} {} ({})".format(self.dock.name, mydate, start, self.line)
 
     class Meta:
-        ordering = ('dock', 'date', 'slot', 'line')
+        ordering = ('dock', 'date', 'index', 'line')
         verbose_name = _("Slot")
         verbose_name_plural = _("Slots")
 
 
 class Job(models.Model):
     PAYLOADS = [(x + 1, "{} t".format(x+1)) for x in range(40)]
-    slot =  models.ForeignKey(Slot, on_delete=models.CASCADE)
+    slot = models.ForeignKey(Slot, on_delete=models.CASCADE)
     number = models.CharField(max_length=25)
     payload = models.PositiveSmallIntegerField(default=25, choices=PAYLOADS)
     description = models.CharField(max_length=200, blank=True)
@@ -193,3 +194,9 @@ class Role(models.Model):
         verbose_name = _("Role")
         verbose_name_plural = _("Roles")
         unique_together = ("user", "station")
+
+
+# class Silo(models.Model):
+#     name = models.CharField(max_length=200)
+#     station = models.ForeignKey(Station, on_delete=models.CASCADE,
+#                                 related_name='silos')
