@@ -92,9 +92,8 @@ class ModelsTest(TestCase):
         self.assertEqual(self.slot.__str__(), "Truck: 2018-01-01 8:00 (0)")
 
     def test_slot_ablosute_url(self):
-        url = '/slot/{}/{}/{}/date/2018/1/1'.format(
-            self.station.pk, self.dock.pk, self.slot.line)
-        self.assertEqual(self.slot.get_absolute_url(), url)
+        self.assertEqual(self.slot.get_absolute_url(),
+                         '/slot/{}'.format(self.slot.pk))
 
     # Job tests
     def test_job_creation(self):
@@ -156,8 +155,8 @@ class ViewsTests(TestCase):
         cls.dummy.set_password("dpass")
         cls.dummy.save()
         models.UserCompany(user=cls.dummy, company=cls.company).save()
-        mydate = datetime.strptime('2018-01-01', '%Y-%m-%d')
-        cls.slot = models.Slot(dock=cls.dock, date=mydate, slot=1, line=0,
+        cls.slotdate = datetime.strptime('2018-01-01', '%Y-%m-%d')
+        cls.slot = models.Slot(dock=cls.dock, date=cls.slotdate, slot=1, line=0,
                                user=cls.carrier)
         cls.slot.save()
         cls.job = models.Job(number="4711", slot=cls.slot)
@@ -191,3 +190,14 @@ class ViewsTests(TestCase):
         res = self.c.get('/docks/{}/date/2018/1/1'.format(self.station.pk))
         self.assertContains(res, 'MyCompany - 4711')
 
+    def test_slot_redirect(self):
+        logged_in = self.c.login(username='carrier', password='cpass')
+        url = '/slot/{}/{}/{}/date/{}'.format(
+            self.slot.dock.pk, self.slot.slot, self.slot.line,
+            self.slotdate.strftime('%Y/%m/%d'))
+        res = self.c.get(url)
+        self.assertRedirects(res, '/slot/{}'.format(self.slot.pk))
+        url += "3"
+        res = self.c.get(url)
+        slot = models.Slot.objects.last()
+        self.assertRedirects(res, '/newslot/{}'.format(slot.pk))

@@ -112,8 +112,8 @@ class Dock(models.Model):
 
 
 class Slot(models.Model):
-    dock = models.ForeignKey(Dock, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.PROTECT, default=1)
+    dock = models.ForeignKey(Dock, on_delete=models.CASCADE)
     date = models.DateField(auto_now=False)
     slot = models.IntegerField()
     line = models.IntegerField()
@@ -123,11 +123,7 @@ class Slot(models.Model):
     created = models.DateTimeField(auto_now_add=True)
 
     def get_absolute_url(self):
-        args = {'station': self.dock.station.pk, 'dock': self.dock.pk,
-                'line': self.line, 'year': self.date.year,
-                'month': self.date.month, 'day': self.date.day,
-                }
-        return reverse('dockslot', kwargs=args)
+        return reverse('slotdetail', args=[str(self.pk)])
 
     def __str__(self):
         start = self.dock.available_slots[self.date.weekday()][self.slot]

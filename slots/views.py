@@ -47,10 +47,10 @@ class StationDocks(LoginRequiredMixin, generic.DetailView):
                     anchor = "<a href='{}' class='text-info'>{}</a>"
                     tag = mark_safe(anchor.format(url, res))
                 else:
-                    args = {'station': dock.station.pk, 'dock': dock.pk,
-                            'line': line, 'year': date.year, 'day': date.day,
-                            'month': date.month, }
-                    url = reverse('dockslot', kwargs=args)
+                    args = {'dock': dock.pk, 'slot': i, 'line': line,
+                            'year': date.year, 'month': date.month,
+                            'day': date.day}
+                    url = reverse('getslot', kwargs=args)
                     anchor = "<a href='{}' class='text-success'>{}</a>"
                     tag = mark_safe(anchor.format(url, _("Free")))
                 slot += [tag]
@@ -60,9 +60,10 @@ class StationDocks(LoginRequiredMixin, generic.DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         station = self.get_object()
-        mydate = "{}-{}-{}".format(self.kwargs['year'], self.kwargs['month'],
-                                   self.kwargs['day'])
-        showdate = datetime.strptime(mydate, "%Y-%m-%d")
+        showdate = datetime(
+            year=self.kwargs['year'], month=self.kwargs['month'],
+            day=self.kwargs['day']
+        )
         docklist = []
         for dock in station.docks.all().order_by('pk'):
             docklist.append([dock.name, self.get_dock_data(dock, showdate)])
@@ -72,6 +73,22 @@ class StationDocks(LoginRequiredMixin, generic.DetailView):
         return context
 
 
-class DockSlot(generic.DetailView):
+class SlotRedirect(LoginRequiredMixin, generic.RedirectView):
+    def get_redirect_url(self, *args, **kwargs):
+        slotdate = datetime(
+            year=kwargs['year'], month=kwargs['month'], day=kwargs['day']
+        )
+        dock = get_object_or_404(models.Dock, pk=kwargs['dock'])
+        slot, created = models.Slot.objects.get_or_create(
+            dock=dock, date=slotdate, slot=kwargs['slot'], line=kwargs['line'])
+        if created:
+            slot.user = self.request.user
+            slot.save()
+            return reverse('newslot', kwargs={'pk': slot.pk,  })
+        else:
+            return reverse('slotdetail', kwargs={'pk': slot.pk, })
+
+
+class SlotDetail(generic.DetailView):
     model = models.Slot
     template_name = 'slots/slot_detail.html'

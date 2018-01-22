@@ -10,8 +10,10 @@ urlpatterns = [
     path('<int:pk>', views.StationRedirect.as_view(), name='station'),
     path('docks/<int:pk>'+datematch,
          views.StationDocks.as_view(), name='stationdocks'),
-    path('slot/<int:station>/<int:dock>/<int:line>'+datematch,
-         views.DockSlot.as_view(), name='dockslot'),
+    path('slot/<int:dock>/<int:slot>/<int:line>'+datematch,
+         views.SlotRedirect.as_view(), name='getslot'),
+    path('slot/<int:pk>', views.SlotDetail.as_view(), name='slotdetail'),
+    path('newslot/<int:pk>', views.SlotDetail.as_view(), name='newslot'),
     # path('silos/<int:pk>/date/<int:year>/<int:month>/<int:day>',
     #      views.StationSilos.as_view(), name='stationsilos'),
 ]
