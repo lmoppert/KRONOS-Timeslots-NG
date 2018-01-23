@@ -1,5 +1,4 @@
-# from datetime import timedelta, datetime, time
-from datetime import time
+from datetime import datetime, time, timezone
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.postgres.fields import JSONField
 from django.contrib.auth.models import User
@@ -116,6 +115,16 @@ class Slot(models.Model):
     is_klv = models.BooleanField(default=False)
     is_blocked = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
+
+    @property
+    def age(self):
+        """calculate the age of this slot in minutes"""
+        td = datetime.now(timezone.utc) - self.created
+        return int(divmod(td.total_seconds(), 60)[0])
+
+    @property
+    def has_jobs(self):
+        return (self.job_set.all().count() >= 1)
 
     def get_start(self):
         start = self.dock.available_slots[self.date.weekday()][self.index]

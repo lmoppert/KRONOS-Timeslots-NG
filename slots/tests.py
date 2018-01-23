@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.test import TestCase
 from django.apps import apps
 from slots.apps import SlotsConfig
@@ -94,6 +94,16 @@ class ModelsTest(TestCase):
     def test_slot_ablosute_url(self):
         self.assertEqual(self.slot.get_absolute_url(),
                          '/slot/{}'.format(self.slot.pk))
+
+    def test_slot_age(self):
+        self.slot.created -= timedelta(minutes=10)
+        self.assertEqual(self.slot.age, 10)
+
+    def test_slot_has_jobs(self):
+        self.assertTrue(self.slot.has_jobs)
+        newslot = models.Slot(dock=self.dock, date=self.slot.date, index=0,
+                              line=0, user=self.carrier)
+        self.assertFalse(newslot.has_jobs)
 
     # Job tests
     def test_job_creation(self):
@@ -199,8 +209,11 @@ class ViewsTests(TestCase):
         self.assertRedirects(res, '/slot/{}'.format(self.slot.pk))
 
     def test_slot_redirect_new(self):
+        before_count = len(models.Slot.objects.all())
         self.c.login(username='carrier', password='cpass')
         url = '/slot/{}/0/0/date/2018/1/9'.format(self.slot.dock.pk)
         res = self.c.get(url)
+        self.assertEqual(len(models.Slot.objects.all()), before_count + 1)
         slot = models.Slot.objects.last()
         self.assertRedirects(res, '/newslot/{}'.format(slot.pk))
+        self.assertEqual(slot.user.username, 'carrier')
