@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time
 from django.test import TestCase
 from django.apps import apps
 from slots.apps import SlotsConfig
@@ -29,7 +29,7 @@ class ModelsTest(TestCase):
         cls.dl = models.Deadline(name="Default")
         cls.dl.save()
         myslots = [['7:00', '8:00', '9:00'], ['7:30'], [], [], [], [], []]
-        cls.dock = models.Dock(name="Truck", station=cls.station,
+        cls.dock = models.Dock(name="Truck", station=cls.station, slotlength=60,
                                deadline=cls.dl, available_slots=myslots)
         cls.dock.save()
         mydate = datetime.strptime('2018-01-01', '%Y-%m-%d')
@@ -105,6 +105,10 @@ class ModelsTest(TestCase):
                               line=0, user=self.carrier)
         self.assertFalse(newslot.has_jobs)
 
+    def test_slot_times(self):
+        self.assertEqual(self.slot.start, time(hour=8))
+        self.assertEqual(self.slot.end, time(hour=9))
+
     # Job tests
     def test_job_creation(self):
         self.assertTrue(isinstance(self.job, models.Job))
@@ -174,7 +178,7 @@ class ViewsTests(TestCase):
 
     def test_index(self):
         res = self.c.get('/')
-        self.assertContains(res, 'Timeslots', 3)
+        self.assertRedirects(res, '/accounts/login/?next=/')
 
     def test_auth_redirect(self):
         url = '/docks/{}/date/2018/1/2'.format(self.station.pk)

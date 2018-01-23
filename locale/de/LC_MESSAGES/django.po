@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-23 14:21+0000\n"
+"POT-Creation-Date: 2018-01-23 15:56+0000\n"
 "PO-Revision-Date: 2018-01-16 13:37+0000\n"
 "Last-Translator: Lutz Moppert <lutz.moppert@kronosww.com>\n"
 "Language-Team: \n"
@@ -17,15 +17,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: slots/models.py:10 slots/models.py:41 slots/models.py:71 slots/models.py:192
+#: slots/models.py:11 slots/models.py:42 slots/models.py:72 slots/models.py:193
 msgid "Name"
 msgstr "Name"
 
-#: slots/models.py:12
+#: slots/models.py:13
 msgid "Booking Deadline"
 msgstr "Buchungs Deadline"
 
-#: slots/models.py:13
+#: slots/models.py:14
 msgid ""
 "Booking deadline = time on the day before from which on a slot can not be "
 "reserved any more. Set this to midnight to turn off this feature completely "
@@ -35,11 +35,11 @@ msgstr ""
 "nicht mehr gebucht werden kann. Zum deaktivieren dieser Funktion wird dies "
 "auf Mitternacht gestellt."
 
-#: slots/models.py:17
+#: slots/models.py:18
 msgid "Edit Deadline"
 msgstr "Deadline für Änderungen"
 
-#: slots/models.py:18
+#: slots/models.py:19
 msgid ""
 "RVNP = Rien ne vas plus -- time when a slot can not be edited any more, set "
 "to Midnight to have the deadline as RNVP"
@@ -47,55 +47,55 @@ msgstr ""
 "RVNP = Rien ne vas plus -- Zeitpunkt ab dem keine Änderung an einer "
 "Reservierung mehr gemacht werden kann."
 
-#: slots/models.py:35 slots/models.py:83
+#: slots/models.py:36 slots/models.py:84
 msgid "Deadline"
 msgstr "Deadline"
 
-#: slots/models.py:36
+#: slots/models.py:37
 msgid "Deadlines"
 msgstr "Deadlines"
 
-#: slots/models.py:40
+#: slots/models.py:41
 msgid "Location"
 msgstr "Standort"
 
-#: slots/models.py:42 slots/models.py:179
+#: slots/models.py:43 slots/models.py:180
 msgid "Description"
 msgstr "Beschreibung"
 
-#: slots/models.py:66 slots/models.py:73
+#: slots/models.py:67 slots/models.py:74
 msgid "Station"
 msgstr "Ladestelle"
 
-#: slots/models.py:67
+#: slots/models.py:68
 msgid "Stations"
 msgstr "Ladestellen"
 
-#: slots/models.py:75
+#: slots/models.py:76
 msgid "Line Count"
 msgstr "Anzahl Reihen"
 
-#: slots/models.py:77
+#: slots/models.py:78
 msgid "Slot Legth"
 msgstr "Zeitfenster Länge"
 
-#: slots/models.py:79
+#: slots/models.py:80
 msgid "Max Slots"
 msgstr "Maximal buchbare Slots"
 
-#: slots/models.py:79
+#: slots/models.py:80
 msgid "0 for unlimited"
 msgstr "0 für unbegrenzt"
 
-#: slots/models.py:81
+#: slots/models.py:82
 msgid "Available Slots"
 msgstr "Verfügbare Ladefenster"
 
-#: slots/models.py:85
-msgid "Multiple Charges"
-msgstr "Mehrere Buchungen pro Ladefenster"
-
 #: slots/models.py:86
+msgid "Multiple Charges"
+msgstr "Mehrere Aufträge möglich"
+
+#: slots/models.py:87
 msgid ""
 "If this option is marked, the reservation form offers the opportunity to add "
 "more than one job"
@@ -103,11 +103,11 @@ msgstr ""
 "Wird diese Option aktiviert, können bei einer Reservierung mehrere Aufträge "
 "angegeben werden."
 
-#: slots/models.py:89
+#: slots/models.py:90
 msgid "Has Status"
 msgstr "Ladefortschritt möglich"
 
-#: slots/models.py:90
+#: slots/models.py:91
 msgid ""
 "This option adds a Statusbar to the job view, which shows the current "
 "loading status"
@@ -115,128 +115,128 @@ msgstr ""
 "Diese Option fügt einem reservierten Slot einen Statusbalken hinzu, der den "
 "derzeitigen Ladestatus repräsentiert."
 
-#: slots/models.py:93
+#: slots/models.py:94
 msgid "Has KLV"
 msgstr "KLV Kennzeichen möglich"
 
-#: slots/models.py:94
+#: slots/models.py:95
 msgid ""
 "Choose this option if you want to be able to mark charges with an KLV/NV flag"
 msgstr ""
 "Ist diese Option gesetzt, können Reservierungen mit dem KLV/NV Kennzeichen "
 "markiert werden."
 
-#: slots/models.py:114 slots/models.py:122
+#: slots/models.py:115 slots/models.py:123
 #: slots/templates/slots/slot_detail.html:11
 msgid "Dock"
 msgstr "Rampe"
 
-#: slots/models.py:115
+#: slots/models.py:116
 msgid "Docks"
 msgstr "Rampen"
 
-#: slots/models.py:120 slots/models.py:208
+#: slots/models.py:121 slots/models.py:209
 #: slots/templates/slots/slot_detail.html:17
 msgid "User"
 msgstr "Anwender"
 
-#: slots/models.py:123
+#: slots/models.py:124
 msgid "Date"
 msgstr "Datum"
 
-#: slots/models.py:124
+#: slots/models.py:125
 msgid "Index"
 msgstr "Index"
 
-#: slots/models.py:125
+#: slots/models.py:126
 msgid "Line"
 msgstr "Reihe"
 
-#: slots/models.py:127
+#: slots/models.py:128
 msgid "Progress"
 msgstr "Ladefortschritt"
 
-#: slots/models.py:128
+#: slots/models.py:129
 msgid "Is KLV"
 msgstr "KLV"
 
-#: slots/models.py:130
+#: slots/models.py:131
 msgid "Is Blocked"
 msgstr "Blockiert"
 
-#: slots/models.py:132
+#: slots/models.py:133
 msgid "Time Created"
 msgstr "Erstellt am"
 
-#: slots/models.py:167 slots/models.py:174
+#: slots/models.py:168 slots/models.py:175
 msgid "Slot"
 msgstr "Slot"
 
-#: slots/models.py:168
+#: slots/models.py:169
 msgid "Slots"
 msgstr "Slots"
 
-#: slots/models.py:175
+#: slots/models.py:176
 msgid "Order Number"
 msgstr "Auftragsnummer"
 
-#: slots/models.py:177
+#: slots/models.py:178
 msgid "Payload"
 msgstr "Ladegewicht"
 
-#: slots/models.py:185
+#: slots/models.py:186
 msgid "Job"
 msgstr "Auftrag"
 
-#: slots/models.py:186
+#: slots/models.py:187
 msgid "Jobs"
 msgstr "Aufträge"
 
-#: slots/models.py:191
+#: slots/models.py:192
 msgid "Short Name"
 msgstr "Kurzname"
 
-#: slots/models.py:193
+#: slots/models.py:194
 msgid "Contact"
 msgstr "Kontakt"
 
-#: slots/models.py:202 slots/models.py:210
+#: slots/models.py:203 slots/models.py:211
 msgid "Company"
 msgstr "Firma"
 
-#: slots/models.py:203
+#: slots/models.py:204
 msgid "Companies"
 msgstr "Firmen"
 
-#: slots/models.py:219
+#: slots/models.py:220
 msgid "User Company"
 msgstr "Firmenzugrhörigkeit"
 
-#: slots/models.py:220
+#: slots/models.py:221
 msgid "User Companies"
 msgstr "Firmenzugrhörigkeiten"
 
-#: slots/models.py:224
+#: slots/models.py:225
 msgid "carrier"
 msgstr "Spediteur"
 
-#: slots/models.py:224
+#: slots/models.py:225
 msgid "viewer"
 msgstr "Zuschauer"
 
-#: slots/models.py:224
+#: slots/models.py:225
 msgid "charger"
 msgstr "Belader"
 
-#: slots/models.py:225
+#: slots/models.py:226
 msgid "loadmaster"
 msgstr "Lademeister"
 
-#: slots/models.py:231
+#: slots/models.py:232
 msgid "Role"
 msgstr "Rolle"
 
-#: slots/models.py:232
+#: slots/models.py:233
 msgid "Roles"
 msgstr "Rollen"
 
@@ -260,7 +260,7 @@ msgstr "Zeitfenster"
 msgid "Created"
 msgstr "Erstellt am"
 
-#: slots/views.py:55
+#: slots/views.py:57
 msgid "Free"
 msgstr "Frei"
 

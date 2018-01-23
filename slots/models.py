@@ -2,6 +2,7 @@ from datetime import datetime, time, timezone, timedelta
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.postgres.fields import JSONField
 from django.contrib.auth.models import User
+from django.db.models import F
 from django.urls import reverse
 from django.db import models
 
@@ -163,7 +164,7 @@ class Slot(models.Model):
         return "{}: {} {} ({})".format(self.dock.name, mydate, start, self.line)
 
     class Meta:
-        ordering = ('dock', 'date', 'index', 'line')
+        ordering = ('dock', F('date').asc(), 'index', 'line')
         verbose_name = _("Slot")
         verbose_name_plural = _("Slots")
 

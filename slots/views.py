@@ -1,4 +1,5 @@
 from datetime import datetime
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.translation import ugettext_lazy as _
 from django.shortcuts import render, get_object_or_404
@@ -8,12 +9,13 @@ from django.views import generic
 from slots import models
 
 
+@login_required
 def index(request):
     context = {'objects': models.Station.objects.all()}
     return render(request, 'slots/index.html', context=context)
 
 
-class StationRedirect(generic.RedirectView):
+class StationRedirect(LoginRequiredMixin, generic.RedirectView):
     permanent = False
 
     def get_redirect_url(self, *args, **kwargs):
@@ -90,6 +92,6 @@ class SlotRedirect(LoginRequiredMixin, generic.RedirectView):
             return reverse('slotdetail', kwargs={'pk': slot.pk})
 
 
-class SlotDetail(generic.DetailView):
+class SlotDetail(LoginRequiredMixin, generic.DetailView):
     model = models.Slot
     template_name = 'slots/slot_detail.html'

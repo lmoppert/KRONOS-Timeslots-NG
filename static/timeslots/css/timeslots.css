@@ -3,10 +3,8 @@ html body {
 }
 html body #main  {
     background-color: #fff;
+    color: #555;
     padding: 30px 0;
-}
-body #main h1, body #main h2, body #main h3, body #main h4, body #main h5 {
-    color: #000;
 }
 body #main h1 {
     font-size: 30px;

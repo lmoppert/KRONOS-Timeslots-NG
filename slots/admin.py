@@ -13,6 +13,10 @@ class CompanyInline(admin.TabularInline):
     model = models.UserCompany
 
 
+class JobInline(admin.TabularInline):
+    model = models.Job
+
+
 @admin.register(models.Company)
 class CompanyAdmin(admin.ModelAdmin):
     model = models.Company
@@ -46,6 +50,14 @@ class DockAdmin(admin.ModelAdmin):
     )
     readonly_fields = ('available_slots', )
     list_display = ('name', 'station', 'deadline')
+
+
+@admin.register(models.Slot)
+class SlotAdmin(admin.ModelAdmin):
+    model = models.Slot
+    list_display = ('dock', 'date', 'index', 'line', 'user')
+    readonly_fields = ('dock', 'date', 'index', 'line', 'user')
+    inlines = [JobInline, ]
 
 
 # Reconfigure User Admin
