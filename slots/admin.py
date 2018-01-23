@@ -35,11 +35,16 @@ class StationAdmin(admin.ModelAdmin):
 class DockAdmin(admin.ModelAdmin):
     model = models.Dock
     fieldsets = (
-        (None, {'fields': ('name', 'station')}),
-        ('Parameters', {'fields': ('linecount', 'max_slots', 'deadline')}),
-        ('Flags', {'fields': ('multiple_charges', 'has_status', 'has_klv')})
+        (None, {
+            'fields': ('name', 'station')}),
+        ('Parameters', {
+            'fields': ('linecount', 'max_slots', 'slotlength', 'deadline')}),
+        ('Flags', {
+            'fields': ('multiple_charges', 'has_status', 'has_klv')}),
+        ('Timeslots', {
+            'fields': ('available_slots', )}),
     )
-
+    readonly_fields = ('available_slots', )
     list_display = ('name', 'station', 'deadline')
 
 

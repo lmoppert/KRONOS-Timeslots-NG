@@ -1,4 +1,4 @@
-from datetime import datetime, time, timezone
+from datetime import datetime, time, timezone, timedelta
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.postgres.fields import JSONField
 from django.contrib.auth.models import User
@@ -69,7 +69,7 @@ class Dock(models.Model):
     station = models.ForeignKey(Station, on_delete=models.CASCADE,
                                 related_name='docks')
     linecount = models.PositiveSmallIntegerField(default=1)
-    # slotlength = models.PositiveSmallIntegerField(default=60)
+    slotlength = models.PositiveSmallIntegerField(default=60)
     max_slots = models.PositiveSmallIntegerField(
         default=0, help_text=_("0 for unlimited"))
     available_slots = JSONField(default=[[], [], [], [], [], [], []])
@@ -126,11 +126,18 @@ class Slot(models.Model):
     def has_jobs(self):
         return (self.job_set.all().count() >= 1)
 
-    def get_start(self):
+    @property
+    def start(self):
         start = self.dock.available_slots[self.date.weekday()][self.index]
         hour, minute = start.split(":")
         starttime = time(hour=int(hour), minute=int(minute))
         return starttime
+
+    @property
+    def end(self):
+        start = datetime.combine(datetime.today(), self.start)
+        end = start + timedelta(minutes=self.dock.slotlength)
+        return end.time()
 
     def get_absolute_url(self):
         return reverse('slotdetail', args=[str(self.pk)])
