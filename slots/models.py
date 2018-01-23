@@ -165,8 +165,8 @@ class Slot(models.Model):
 
     class Meta:
         ordering = ('dock', F('date').asc(), 'index', 'line')
-        verbose_name = _("Slot")
-        verbose_name_plural = _("Slots")
+        verbose_name = _("Timelot")
+        verbose_name_plural = _("Timeslots")
 
 
 class Job(models.Model):

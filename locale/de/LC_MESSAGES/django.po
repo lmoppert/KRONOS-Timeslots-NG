@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-23 15:56+0000\n"
+"POT-Creation-Date: 2018-01-23 16:10+0000\n"
 "PO-Revision-Date: 2018-01-16 13:37+0000\n"
 "Last-Translator: Lutz Moppert <lutz.moppert@kronosww.com>\n"
 "Language-Team: \n"
@@ -168,13 +168,17 @@ msgstr "Blockiert"
 msgid "Time Created"
 msgstr "Erstellt am"
 
-#: slots/models.py:168 slots/models.py:175
-msgid "Slot"
-msgstr "Slot"
+#: slots/models.py:168
+msgid "Timelot"
+msgstr "Zeitfenster"
 
 #: slots/models.py:169
-msgid "Slots"
-msgstr "Slots"
+msgid "Timeslots"
+msgstr "Zeitfenster"
+
+#: slots/models.py:175
+msgid "Slot"
+msgstr "Slot"
 
 #: slots/models.py:176
 msgid "Order Number"
@@ -279,3 +283,6 @@ msgstr "Deutsch"
 #: timeslots/settings.py:125
 msgid "English"
 msgstr "Englisch"
+
+#~ msgid "Slots"
+#~ msgstr "Slots"
