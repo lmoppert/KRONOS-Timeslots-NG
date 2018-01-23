@@ -7,14 +7,17 @@ from django.db import models
 
 
 class Deadline(models.Model):
-    name = models.CharField(max_length=50)
-    booking_deadline = models.TimeField(default='00:00:00', help_text=_(
-        "Booking deadline = time on the day before from which on a slot can "
-        "not be reserved any more. Set this to midnight to turn off this "
-        "feature completely for this station"))
-    rnvp = models.TimeField(default='00:00:00', help_text=_(
-        "RVNP = Rien ne vas plus -- time when a slot can not be edited any "
-        "more, set to Midnight to have the deadline as RNVP"))
+    name = models.CharField(max_length=50, verbose_name=_("Name"))
+    booking_deadline = models.TimeField(
+        default='00:00:00', verbose_name=_("Booking Deadline"),
+        help_text=_("Booking deadline = time on the day before from which on a "
+                    "slot can not be reserved any more. Set this to midnight "
+                    "to turn off this feature completely for this station"))
+    rnvp = models.TimeField(
+        default='00:00:00', verbose_name=_("Edit Deadline"),
+        help_text=_("RVNP = Rien ne vas plus -- time when a slot can not be "
+                    "edited any more, set to Midnight to have the deadline as "
+                    "RNVP"))
 
     # def past_deadline(self, curr_date, curr_time):
     #     my_dl = self.booking_deadline
@@ -34,9 +37,9 @@ class Deadline(models.Model):
 
 
 class Station(models.Model):
-    location = models.CharField(max_length=200)
-    name = models.CharField(max_length=200)
-    description = models.TextField(blank=True)
+    location = models.CharField(max_length=200, verbose_name=_("Location"))
+    name = models.CharField(max_length=200, verbose_name=_("Name"))
+    description = models.TextField(blank=True, verbose_name=_("Description"))
 
     def get_user_role(self, user):
         qs = self.role_set.filter(user__id=user.id)
@@ -65,24 +68,31 @@ class Station(models.Model):
 
 
 class Dock(models.Model):
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200, verbose_name=_("Name"))
     station = models.ForeignKey(Station, on_delete=models.CASCADE,
-                                related_name='docks')
-    linecount = models.PositiveSmallIntegerField(default=1)
-    slotlength = models.PositiveSmallIntegerField(default=60)
+                                related_name='docks', verbose_name=_("Station"))
+    linecount = models.PositiveSmallIntegerField(default=1,
+                                                 verbose_name=_("Line Count"))
+    slotlength = models.PositiveSmallIntegerField(default=60,
+                                                  verbose_name=_("Slot Legth"))
     max_slots = models.PositiveSmallIntegerField(
-        default=0, help_text=_("0 for unlimited"))
-    available_slots = JSONField(default=[[], [], [], [], [], [], []])
-    deadline = models.ForeignKey(Deadline, default=1, on_delete=models.CASCADE)
-    multiple_charges = models.BooleanField(default=True, help_text=_(
-        "If this option is marked, the reservation form offers the opportunity "
-        "to add more than one job"))
-    has_status = models.BooleanField(default=False, help_text=_(
-        "This option adds a Statusbar to the job view, which shows the current "
-        "loading status"))
-    has_klv = models.BooleanField(default=False, help_text=_(
-        "Choose this option if you want to be able to mark charges with an "
-        "KLV/NV flag"))
+        default=0, verbose_name=_("Max Slots"), help_text=_("0 for unlimited"))
+    available_slots = JSONField(default=[[], [], [], [], [], [], []],
+                                verbose_name=_("Available Slots"))
+    deadline = models.ForeignKey(Deadline, default=1, on_delete=models.CASCADE,
+                                 verbose_name=_("Deadline"))
+    multiple_charges = models.BooleanField(
+        default=True, verbose_name=_("Multiple Charges"),
+        help_text=_("If this option is marked, the reservation form offers the "
+                    "opportunity to add more than one job"))
+    has_status = models.BooleanField(
+        default=False, verbose_name=_("Has Status"),
+        help_text=_("This option adds a Statusbar to the job view, which shows "
+                    "the current loading status"))
+    has_klv = models.BooleanField(
+        default=False, verbose_name=_("Has KLV"),
+        help_text=_("Choose this option if you want to be able to mark charges "
+                    "with an KLV/NV flag"))
 
     def has_slots(self, weekday=0):
         if 0 <= weekday <= 6:
@@ -106,15 +116,20 @@ class Dock(models.Model):
 
 
 class Slot(models.Model):
-    user = models.ForeignKey(User, on_delete=models.PROTECT, default=1)
-    dock = models.ForeignKey(Dock, on_delete=models.CASCADE)
-    date = models.DateField(auto_now=False)
-    index = models.IntegerField()
-    line = models.IntegerField()
-    progress = models.PositiveSmallIntegerField(default=0)
-    is_klv = models.BooleanField(default=False)
-    is_blocked = models.BooleanField(default=False)
-    created = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(User, on_delete=models.PROTECT, default=1,
+                             verbose_name=_("User"))
+    dock = models.ForeignKey(Dock, on_delete=models.CASCADE,
+                             verbose_name=_("Dock"))
+    date = models.DateField(auto_now=False, verbose_name=_("Date"))
+    index = models.IntegerField(verbose_name=_("Index"))
+    line = models.IntegerField(verbose_name=_("Line"))
+    progress = models.PositiveSmallIntegerField(default=0,
+                                                verbose_name=_("Progress"))
+    is_klv = models.BooleanField(default=False, verbose_name=_("Is KLV"))
+    is_blocked = models.BooleanField(default=False,
+                                     verbose_name=_("Is Blocked"))
+    created = models.DateTimeField(auto_now_add=True,
+                                   verbose_name=_("Time Created"))
 
     @property
     def age(self):
@@ -155,10 +170,13 @@ class Slot(models.Model):
 
 class Job(models.Model):
     PAYLOADS = [(x + 1, "{} t".format(x+1)) for x in range(40)]
-    slot = models.ForeignKey(Slot, on_delete=models.CASCADE)
-    number = models.CharField(max_length=25)
-    payload = models.PositiveSmallIntegerField(default=25, choices=PAYLOADS)
-    description = models.CharField(max_length=200, blank=True)
+    slot = models.ForeignKey(Slot, on_delete=models.CASCADE,
+                             verbose_name=_("Slot"))
+    number = models.CharField(max_length=25, verbose_name=_("Order Number"))
+    payload = models.PositiveSmallIntegerField(default=25, choices=PAYLOADS,
+                                               verbose_name=_("Payload"))
+    description = models.CharField(max_length=200, blank=True,
+                                   verbose_name=_("Description"))
 
     def __str__(self):
         return self.number
@@ -169,9 +187,10 @@ class Job(models.Model):
 
 
 class Company(models.Model):
-    shortname = models.CharField(max_length=20, blank=True)
-    name = models.CharField(max_length=200)
-    contact = models.TextField(blank=True)
+    shortname = models.CharField(max_length=20, blank=True,
+                                 verbose_name=_("Short Name"))
+    name = models.CharField(max_length=200, verbose_name=_("Name"))
+    contact = models.TextField(blank=True, verbose_name=_("Contact"))
 
     def __str__(self):
         if len(self.shortname) > 1:
@@ -185,8 +204,10 @@ class Company(models.Model):
 
 
 class UserCompany(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    company = models.ForeignKey(Company, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE,
+                                verbose_name=_("User"))
+    company = models.ForeignKey(Company, on_delete=models.CASCADE,
+                                verbose_name=_("Company"))
 
     def __str__(self):
         if len(self.company.shortname) > 1:
@@ -213,6 +234,6 @@ class Role(models.Model):
 
 
 # class Silo(models.Model):
-#     name = models.CharField(max_length=200)
+#     name = models.CharField(max_length=200, verbose_name=_("Name"))
 #     station = models.ForeignKey(Station, on_delete=models.CASCADE,
 #                                 related_name='silos')

@@ -15,7 +15,7 @@
         <td>{{ object.start }} - {{ object.end }}</td>
     </tr><tr>
         <th>{% trans "User" %}</th>
-        <td>{{ object.user.fullname }} ({{ object.user.usercompany }})</td>
+        <td>{{ object.user.get_full_name }} ({{ object.user.usercompany }})</td>
     </tr><tr>
         <th>{% trans "Created" %}</th>
         <td>{{ object.created }}</td>
