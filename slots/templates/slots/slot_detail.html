@@ -22,6 +22,22 @@
     </tr>
 </table>
 
+<form method="post" action="">
+    {% csrf_token %} 
+    {{ formset.manaement_form }}
+    {% for form in formset %}
+        <table class="table table-bordered table-sm">
+            {{ form }}
+        </table>
+    {% endfor %}
+    <button type="submit" class="btn btn-success">
+        {% trans "Save Reservation" %}
+    </button>
+    <button type="submit" class="btn btn-warning">
+        {% trans "Cancel Reservation" %}
+    </button>
+</form>
+
 {% endblock %}
 <!-- vim:syntax=htmldjango
 -->

@@ -6,7 +6,7 @@ from django.shortcuts import render, get_object_or_404
 from django.utils.safestring import mark_safe
 from django.urls import reverse
 from django.views import generic
-from slots import models
+from . import models, utils, forms
 
 
 @login_required
@@ -19,6 +19,7 @@ class StationRedirect(LoginRequiredMixin, generic.RedirectView):
     permanent = False
 
     def get_redirect_url(self, *args, **kwargs):
+        utils.remove_garbage()
         station = get_object_or_404(models.Station, pk=kwargs['pk'])
         today = datetime.today()
         if station.has_docks:
@@ -61,6 +62,7 @@ class StationDocks(LoginRequiredMixin, generic.DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        utils.remove_garbage()
         station = self.get_object()
         showdate = datetime(
             year=self.kwargs['year'], month=self.kwargs['month'],
@@ -77,6 +79,7 @@ class StationDocks(LoginRequiredMixin, generic.DetailView):
 
 class SlotRedirect(LoginRequiredMixin, generic.RedirectView):
     def get_redirect_url(self, *args, **kwargs):
+        utils.remove_garbage()
         slotdate = datetime(
             year=kwargs['year'], month=kwargs['month'], day=kwargs['day']
         )
@@ -92,6 +95,34 @@ class SlotRedirect(LoginRequiredMixin, generic.RedirectView):
             return reverse('slotdetail', kwargs={'pk': slot.pk})
 
 
-class SlotDetail(LoginRequiredMixin, generic.DetailView):
+class SlotDisplay(generic.DetailView):
     model = models.Slot
     template_name = 'slots/slot_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['formset'] = forms.JobFormSet(instance=self.object)
+        return context
+
+
+class SlotJobs(generic.detail.SingleObjectMixin, generic.FormView):
+    model = models.Slot
+    template_name = 'slots/slot_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['formset'] = forms.JobFormSet(instance=self.object)
+        return context
+
+
+class SlotDetail(LoginRequiredMixin, generic.DetailView):
+    """This view is using the above defined classes to provide the actual view.
+    Which one to use is determined by the type of request we get (POST or GET).
+    """
+    def get(self, request, *args, **kwargs):
+        view = SlotDisplay.as_view()
+        return view(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        view = SlotJobs.as_view()
+        return view(request, *args, **kwargs)
