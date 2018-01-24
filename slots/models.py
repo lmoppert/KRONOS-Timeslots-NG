@@ -116,6 +116,22 @@ class Dock(models.Model):
         verbose_name_plural = _("Docks")
 
 
+class DraftSlotManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(is_blocked=False, job__isnull=True)
+
+
+class ReservedSlotManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(is_blocked=False,
+                                             job__isnull=False)
+
+
+class BlockedSlotManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(is_blocked=True)
+
+
 class Slot(models.Model):
     user = models.ForeignKey(User, on_delete=models.PROTECT, default=1,
                              verbose_name=_("User"))
@@ -131,6 +147,10 @@ class Slot(models.Model):
                                      verbose_name=_("Is Blocked"))
     created = models.DateTimeField(auto_now_add=True,
                                    verbose_name=_("Time Created"))
+    objects = models.Manager()
+    drafts = DraftSlotManager()
+    reservations = ReservedSlotManager()
+    blockings = BlockedSlotManager()
 
     @property
     def age(self):
