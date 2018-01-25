@@ -43,6 +43,8 @@ class Station(models.Model):
     description = models.TextField(blank=True, verbose_name=_("Description"))
 
     def get_user_role(self, user):
+        if user.is_superuser:
+            return 4
         qs = self.role_set.filter(user__id=user.id)
         if qs.exists():
             return qs.first().role

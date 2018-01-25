@@ -55,7 +55,7 @@ body #footer a:hover, body #main a:hover {
 }
 #footer .content {
     margin: 15px auto;
-    max-width: 1140px;
+    max-width: 1100px;
     background: url(../img/footerlogo.png) top left no-repeat;
     font-size: 12px;
     display: block;

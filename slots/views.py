@@ -11,8 +11,11 @@ from . import models, utils, forms
 
 @login_required
 def index(request):
-    context = {'objects': models.Station.objects.all()}
-    return render(request, 'slots/index.html', context=context)
+    if request.user.is_superuser:
+        objects = models.Station.objects.all()
+    else:
+        objects = models.Station.objects.filter(role__user=request.user)
+    return render(request, 'slots/index.html', context={'objects': objects})
 
 
 class StationRedirect(LoginRequiredMixin, generic.RedirectView):

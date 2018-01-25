@@ -1,5 +1,7 @@
 {% load static from staticfiles %}
 {% load i18n %}
+{% load slot_tags %}
+
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -17,11 +19,20 @@
 </head>
 <body>
     <div id="header">
-        <nav class="navbar">
+        <nav class="navbar navbar-expand-lg">
             <a class="navbar-brand" href="/">
                 <img src="{% static "timeslots/img/kronoslogo.png" %}"
                 alt="KRONOS Logo" class="img-fluid">
             </a>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            {{ user.get_full_name }}{{ permission|show_role }}
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </nav>
     </div>
     <div id="main">

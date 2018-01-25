@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-23 16:10+0000\n"
+"POT-Creation-Date: 2018-01-24 17:29+0000\n"
 "PO-Revision-Date: 2018-01-16 13:37+0000\n"
 "Last-Translator: Lutz Moppert <lutz.moppert@kronosww.com>\n"
 "Language-Team: \n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: slots/models.py:11 slots/models.py:42 slots/models.py:72 slots/models.py:193
+#: slots/models.py:11 slots/models.py:42 slots/models.py:72 slots/models.py:213
 msgid "Name"
 msgstr "Name"
 
@@ -59,7 +59,7 @@ msgstr "Deadlines"
 msgid "Location"
 msgstr "Standort"
 
-#: slots/models.py:43 slots/models.py:180
+#: slots/models.py:43 slots/models.py:200
 msgid "Description"
 msgstr "Beschreibung"
 
@@ -126,7 +126,7 @@ msgstr ""
 "Ist diese Option gesetzt, können Reservierungen mit dem KLV/NV Kennzeichen "
 "markiert werden."
 
-#: slots/models.py:115 slots/models.py:123
+#: slots/models.py:115 slots/models.py:139
 #: slots/templates/slots/slot_detail.html:11
 msgid "Dock"
 msgstr "Rampe"
@@ -135,112 +135,112 @@ msgstr "Rampe"
 msgid "Docks"
 msgstr "Rampen"
 
-#: slots/models.py:121 slots/models.py:209
+#: slots/models.py:137 slots/models.py:229
 #: slots/templates/slots/slot_detail.html:17
 msgid "User"
 msgstr "Anwender"
 
-#: slots/models.py:124
+#: slots/models.py:140
 msgid "Date"
 msgstr "Datum"
 
-#: slots/models.py:125
+#: slots/models.py:141
 msgid "Index"
 msgstr "Index"
 
-#: slots/models.py:126
+#: slots/models.py:142
 msgid "Line"
 msgstr "Reihe"
 
-#: slots/models.py:128
+#: slots/models.py:144
 msgid "Progress"
 msgstr "Ladefortschritt"
 
-#: slots/models.py:129
+#: slots/models.py:145
 msgid "Is KLV"
 msgstr "KLV"
 
-#: slots/models.py:131
+#: slots/models.py:147
 msgid "Is Blocked"
 msgstr "Blockiert"
 
-#: slots/models.py:133
+#: slots/models.py:149
 msgid "Time Created"
 msgstr "Erstellt am"
 
-#: slots/models.py:168
+#: slots/models.py:188
 msgid "Timelot"
 msgstr "Zeitfenster"
 
-#: slots/models.py:169
+#: slots/models.py:189
 msgid "Timeslots"
 msgstr "Zeitfenster"
 
-#: slots/models.py:175
+#: slots/models.py:195
 msgid "Slot"
 msgstr "Slot"
 
-#: slots/models.py:176
+#: slots/models.py:196
 msgid "Order Number"
 msgstr "Auftragsnummer"
 
-#: slots/models.py:178
+#: slots/models.py:198
 msgid "Payload"
 msgstr "Ladegewicht"
 
-#: slots/models.py:186
+#: slots/models.py:206
 msgid "Job"
 msgstr "Auftrag"
 
-#: slots/models.py:187
+#: slots/models.py:207
 msgid "Jobs"
 msgstr "Aufträge"
 
-#: slots/models.py:192
+#: slots/models.py:212
 msgid "Short Name"
 msgstr "Kurzname"
 
-#: slots/models.py:194
+#: slots/models.py:214
 msgid "Contact"
 msgstr "Kontakt"
 
-#: slots/models.py:203 slots/models.py:211
+#: slots/models.py:223 slots/models.py:231
 msgid "Company"
 msgstr "Firma"
 
-#: slots/models.py:204
+#: slots/models.py:224
 msgid "Companies"
 msgstr "Firmen"
 
-#: slots/models.py:220
+#: slots/models.py:240
 msgid "User Company"
 msgstr "Firmenzugrhörigkeit"
 
-#: slots/models.py:221
+#: slots/models.py:241
 msgid "User Companies"
 msgstr "Firmenzugrhörigkeiten"
 
-#: slots/models.py:225
+#: slots/models.py:245
 msgid "carrier"
 msgstr "Spediteur"
 
-#: slots/models.py:225
+#: slots/models.py:245
 msgid "viewer"
 msgstr "Zuschauer"
 
-#: slots/models.py:225
+#: slots/models.py:245
 msgid "charger"
 msgstr "Belader"
 
-#: slots/models.py:226
+#: slots/models.py:246
 msgid "loadmaster"
 msgstr "Lademeister"
 
-#: slots/models.py:232
+#: slots/models.py:252
 msgid "Role"
 msgstr "Rolle"
 
-#: slots/models.py:233
+#: slots/models.py:253
 msgid "Roles"
 msgstr "Rollen"
 
@@ -264,7 +264,15 @@ msgstr "Zeitfenster"
 msgid "Created"
 msgstr "Erstellt am"
 
-#: slots/views.py:57
+#: slots/templates/slots/slot_detail.html:34
+msgid "Save Reservation"
+msgstr "Reservierung speichern"
+
+#: slots/templates/slots/slot_detail.html:37
+msgid "Cancel Reservation"
+msgstr "Reservierung löschen"
+
+#: slots/views.py:58
 msgid "Free"
 msgstr "Frei"
 
@@ -283,6 +291,3 @@ msgstr "Deutsch"
 #: timeslots/settings.py:125
 msgid "English"
 msgstr "Englisch"
-
-#~ msgid "Slots"
-#~ msgstr "Slots"

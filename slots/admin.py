@@ -31,7 +31,7 @@ class DeadlineAdmin(admin.ModelAdmin):
 @admin.register(models.Station)
 class StationAdmin(admin.ModelAdmin):
     model = models.Station
-    list_display = ('location', 'name')
+    list_display = ('__str__', 'description')
     inlines = [RoleInline, ]
 
 
@@ -49,7 +49,7 @@ class DockAdmin(admin.ModelAdmin):
             'fields': ('available_slots', )}),
     )
     readonly_fields = ('available_slots', )
-    list_display = ('name', 'station', 'deadline')
+    list_display = ('__str__', 'deadline')
 
 
 @admin.register(models.Slot)

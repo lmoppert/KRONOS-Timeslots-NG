@@ -4,18 +4,16 @@
 {% block base_content %}
 <h1>{% trans "New Timeslots" %}</h1>
 <div class="row">
-    <div class="col-6">
+    <div class="col-8">
         <h2>{% trans "Available Stations" %}</h2>
-        <table class="table table-hover table-striped table-bordered">
+        <div class="list-group">
             {% for object in objects %}
-            <tr>
-                <td><a href="{{ object.get_absolute_url }}">{{ object }}</a></td>
-            </tr>
+            <a href="{{ object.get_absolute_url }}" class="list-group-item
+                list-group-item-action">{{ object }}</a>
             {% endfor %}
-        </table>
+        </div>
     </div>
 </div>
 
 {% endblock %}
-<!-- vim:syntax=htmldjango
--->
+<!-- vim:syntax=htmldjango -->
