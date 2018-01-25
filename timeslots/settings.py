@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'debug_toolbar',
     'slots',
-    # 'crispy_forms',
+    'crispy_forms',
     # 'django_tables2',
 ]
 
