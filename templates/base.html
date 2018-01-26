@@ -27,8 +27,8 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
                     {% if stations %}
-                    <li class="nav-item dropdown">
-                        <a class="nav-link btn btn-sm btn-outline-light dropdown-toggle" href="#" id="stationDropdown" role="button"
+                    <li class="nav-item dropdown btn btn-outline-light">
+                        <a class="nav-link dropdown-toggle" href="#" id="stationDropdown" role="button"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             {{ station }}
                         </a>
@@ -41,11 +41,16 @@
                     {% endif %}
                 </ul>
                 <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <b>{{ user.get_full_name }}</b>
                             {{ permission|show_role }}
                         </a>
+                        <div class="dropdown-menu" aria-labelledby="userDropdown">
+                            <a class="dropdown-item" href="/admin">{% trans "Administration" %}</a>
+                            <a class="dropdown-item" href="#">{% trans "Profil" %}</a>
+                        </div>
                     </li>
                 </ul>
             </div>

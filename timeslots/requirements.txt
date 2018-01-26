@@ -7,7 +7,8 @@ psycopg2
 ##############################################################################
 # Optional packages 
 ##############################################################################
-django-crispy-forms
+# django-crispy-forms
+# django-bootstrap4
 # django-tables2
 # sqlparse
 

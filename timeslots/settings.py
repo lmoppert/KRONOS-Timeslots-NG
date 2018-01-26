@@ -44,8 +44,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'debug_toolbar',
     'slots',
-    'crispy_forms',
-    # 'django_tables2',
+    'bootstrap4',
 ]
 
 MIDDLEWARE = [
@@ -134,6 +133,6 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
 
-# Django-Extensions
+# Configure Plugins and Applications
 
 SHELL_PLUS_PRE_IMPORTS = [('scripts.helper', 'generate_slots')]

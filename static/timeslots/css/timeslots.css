@@ -49,10 +49,7 @@ body #footer a:hover, body #main a:hover {
 }
 #header .navbar .nav-item a#stationDropdown {
     font-weight: bold;
-    font-size: 18px;
 }
-#header .navbar .nav-item a:focus#stationDropdown,
-#header .navbar .nav-item a:active#stationDropdown,
 #header .navbar .nav-item a:hover#stationDropdown {
     color: #04397d;
 }
