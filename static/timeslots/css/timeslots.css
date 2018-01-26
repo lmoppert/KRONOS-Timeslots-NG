@@ -41,10 +41,23 @@ body #footer a:hover, body #main a:hover {
 }
 #header .navbar-brand {
     padding: 0;
+    margin-right: 40px;
     max-height: 50px;
 }
 #header .navbar .nav-item a {
     color: #eee;
+}
+#header .navbar .nav-item a#stationDropdown {
+    font-weight: bold;
+    font-size: 18px;
+}
+#header .navbar .nav-item a:focus#stationDropdown,
+#header .navbar .nav-item a:active#stationDropdown,
+#header .navbar .nav-item a:hover#stationDropdown {
+    color: #04397d;
+}
+#header .navbar .nav-item .dropdown-menu a {
+    color: #04397d;
 }
 #footer {
     margin: 0;

@@ -73,7 +73,11 @@ class StationDocks(LoginRequiredMixin, generic.DetailView):
         context = super().get_context_data(**kwargs)
         _remove_garbage()
         station = self.get_object()
-        stations = models.Station.objects.filter(role__user=self.request.user)
+        if self.request.user.is_superuser:
+            stations = models.Station.objects.all()
+        else:
+            stations = models.Station.objects.filter(
+                role__user=self.request.user)
         showdate = datetime(
             year=self.kwargs['year'], month=self.kwargs['month'],
             day=self.kwargs['day']
