@@ -27,8 +27,18 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item">
+                        <select class="form-control" id="stationSelect">
+                            {% for item in stations %}
+                            <option value="{{ item.pk }}" {% if item == station %} selected {% endif %} >{{ item }}</option>
+                            {% endfor %}
+                        </select>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
                         <a href="#" class="nav-link">
-                            {{ user.get_full_name }}{{ permission|show_role }}
+                            <b>{{ user.get_full_name }}</b>
+                            {{ permission|show_role }}
                         </a>
                     </li>
                 </ul>

@@ -1,4 +1,4 @@
-from datetime import datetime, time, timezone, timedelta
+from datetime import datetime, time, timedelta  # , timezone
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.postgres.fields import JSONField
 from django.contrib.auth.models import User
@@ -155,16 +155,6 @@ class Slot(models.Model):
     blockings = BlockedSlotManager()
 
     @property
-    def age(self):
-        """calculate the age of this slot in minutes"""
-        td = datetime.now(timezone.utc) - self.created
-        return int(divmod(td.total_seconds(), 60)[0])
-
-    @property
-    def has_jobs(self):
-        return (self.job_set.all().count() >= 1)
-
-    @property
     def start(self):
         start = self.dock.available_slots[self.date.weekday()][self.index]
         hour, minute = start.split(":")
@@ -226,11 +216,17 @@ class Company(models.Model):
         verbose_name_plural = _("Companies")
 
 
-class UserCompany(models.Model):
+class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE,
                                 verbose_name=_("User"))
     company = models.ForeignKey(Company, on_delete=models.CASCADE,
                                 verbose_name=_("Company"))
+
+    def get_stations(self):
+        if self.user.is_superuser:
+            return Station.objects.all()
+        else:
+            return Station.objects.filter(role__user=self.user)
 
     def __str__(self):
         if len(self.company.shortname) > 1:

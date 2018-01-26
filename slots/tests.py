@@ -1,8 +1,8 @@
-from datetime import datetime, timedelta, time
+from datetime import datetime, timedelta, time, timezone
 from django.test import TestCase
 from django.apps import apps
 from slots.apps import SlotsConfig
-from slots import models
+from slots import models, utils
 
 
 # Test basics
@@ -39,13 +39,14 @@ class ModelsTest(TestCase):
         cls.company.save()
         cls.carrier = models.User(username='carrier', password='pass')
         cls.carrier.save()
-        models.UserCompany(user=cls.carrier, company=cls.company).save()
-        cls.master = models.User(username='master', password='pass')
+        models.Profile(user=cls.carrier, company=cls.company).save()
+        cls.master = models.User(username='master', password='pass',
+                                 first_name="Load", last_name="Master")
         cls.master.save()
-        models.UserCompany(user=cls.master, company=cls.tgl).save()
+        models.Profile(user=cls.master, company=cls.tgl).save()
         cls.dummy = models.User(username='dummy', password='pass')
         cls.dummy.save()
-        models.UserCompany(user=cls.dummy, company=cls.company).save()
+        models.Profile(user=cls.dummy, company=cls.company).save()
         cls.slot = models.Slot(dock=cls.dock, date=mydate, index=1, line=0,
                                user=cls.carrier)
         cls.slot.save()
@@ -95,15 +96,37 @@ class ModelsTest(TestCase):
         self.assertEqual(self.slot.get_absolute_url(),
                          '/slot/{}'.format(self.slot.pk))
 
-    def test_slot_age(self):
-        self.slot.created -= timedelta(minutes=10)
-        self.assertEqual(self.slot.age, 10)
+    def test_garbage_collector(self):
+        mydate = datetime.strptime('2018-01-01', '%Y-%m-%d')
+        slot = models.Slot(user=self.carrier, dock=self.dock, date=mydate,
+                           index=1, line=1)
+        slot.save()
+        self.assertEqual(models.Slot.objects.count(), 2)
+        utils.remove_garbage()
+        self.assertEqual(models.Slot.objects.count(), 2)
+        slot.created = datetime.now(timezone.utc)-timedelta(minutes=10)
+        slot.save()
+        utils.remove_garbage()
+        self.assertEqual(models.Slot.objects.count(), 1)
 
-    def test_slot_has_jobs(self):
-        self.assertTrue(self.slot.has_jobs)
+    def test_slot_manager(self):
+        self.assertEqual(models.Slot.objects.count(), 1)
+        self.assertEqual(models.Slot.drafts.count(), 0)
+        self.assertEqual(models.Slot.reservations.count(), 1)
+        self.assertEqual(models.Slot.blockings.count(), 0)
         newslot = models.Slot(dock=self.dock, date=self.slot.date, index=0,
                               line=0, user=self.carrier)
-        self.assertFalse(newslot.has_jobs)
+        newslot.save()
+        self.assertEqual(models.Slot.objects.count(), 2)
+        self.assertEqual(models.Slot.drafts.count(), 1)
+        self.assertEqual(models.Slot.reservations.count(), 1)
+        self.assertEqual(models.Slot.blockings.count(), 0)
+        newslot.is_blocked = True
+        newslot.save()
+        self.assertEqual(models.Slot.objects.count(), 2)
+        self.assertEqual(models.Slot.drafts.count(), 0)
+        self.assertEqual(models.Slot.reservations.count(), 1)
+        self.assertEqual(models.Slot.blockings.count(), 1)
 
     def test_slot_times(self):
         self.assertEqual(self.slot.start, time(hour=8))
@@ -129,12 +152,15 @@ class ModelsTest(TestCase):
         self.assertEqual(self.station.get_user_role(self.carrier), 1)
 
     def test_master(self):
-        self.assertTrue(isinstance(self.carrier, models.User))
+        self.assertTrue(isinstance(self.master, models.User))
         self.assertEqual(self.station.get_user_role(self.master), 4)
 
-    def test_dummy(self):
-        self.assertTrue(isinstance(self.carrier, models.User))
+    def test_super_dummy(self):
+        self.assertTrue(isinstance(self.dummy, models.User))
         self.assertEqual(self.station.get_user_role(self.dummy), 0)
+        self.dummy.is_superuser = True
+        self.dummy.save()
+        self.assertEqual(self.station.get_user_role(self.dummy), 4)
 
 
 # Test views
@@ -151,7 +177,7 @@ class ViewsTests(TestCase):
         cls.dl = models.Deadline(name="Default")
         cls.dl.save()
         myslots = [['7:00', '8:00', '9:00'], ['7:30'], [], [], [], [], []]
-        cls.dock = models.Dock(name="Truck", station=cls.station,
+        cls.dock = models.Dock(name="Truck", station=cls.station, slotlength=60,
                                deadline=cls.dl, available_slots=myslots)
         cls.dock.save()
         cls.today = datetime.today()
@@ -160,15 +186,15 @@ class ViewsTests(TestCase):
         cls.carrier = models.User(username='carrier')
         cls.carrier.set_password("cpass")
         cls.carrier.save()
-        models.UserCompany(user=cls.carrier, company=cls.company).save()
+        models.Profile(user=cls.carrier, company=cls.company).save()
         cls.master = models.User(username='master')
         cls.master.set_password("mpass")
         cls.master.save()
-        models.UserCompany(user=cls.master, company=cls.company).save()
+        models.Profile(user=cls.master, company=cls.company).save()
         cls.dummy = models.User(username='dummy')
         cls.dummy.set_password("dpass")
         cls.dummy.save()
-        models.UserCompany(user=cls.dummy, company=cls.company).save()
+        models.Profile(user=cls.dummy, company=cls.company).save()
         cls.slotdate = datetime.strptime('2018-01-01', '%Y-%m-%d')
         cls.slot = models.Slot(dock=cls.dock, date=cls.slotdate, index=1,
                                line=0, user=cls.carrier)
@@ -176,9 +202,18 @@ class ViewsTests(TestCase):
         cls.job = models.Job(number="4711", slot=cls.slot)
         cls.job.save()
 
+    def test_show_role_tag(self):
+        from slots.templatetags.slot_tags import show_role
+        self.assertEqual(show_role(1), " ({})".format(models.Role.ROLES[0][1]))
+
     def test_index(self):
         res = self.c.get('/')
         self.assertRedirects(res, '/accounts/login/?next=/')
+        self.dummy.is_superuser = True
+        self.dummy.save()
+        self.c.login(username='dummy', password='dpass')
+        res = self.c.get('/')
+        self.assertContains(res, 'Leverkusen - packed')
 
     def test_auth_redirect(self):
         url = '/docks/{}/date/2018/1/2'.format(self.station.pk)

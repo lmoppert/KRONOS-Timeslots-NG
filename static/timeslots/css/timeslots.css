@@ -43,6 +43,9 @@ body #footer a:hover, body #main a:hover {
     padding: 0;
     max-height: 50px;
 }
+#header .navbar .nav-item a {
+    color: #eee;
+}
 #footer {
     margin: 0;
     position: relative;

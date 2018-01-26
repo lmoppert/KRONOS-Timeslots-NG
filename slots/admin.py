@@ -9,8 +9,8 @@ class RoleInline(admin.TabularInline):
     extra = 1
 
 
-class CompanyInline(admin.TabularInline):
-    model = models.UserCompany
+class ProfileInline(admin.TabularInline):
+    model = models.Profile
 
 
 class JobInline(admin.TabularInline):
@@ -66,4 +66,4 @@ admin.site.unregister(User)
 
 @admin.register(User)
 class UserAdmin(AuthUserAdmin):
-    inlines = [RoleInline, CompanyInline]
+    inlines = [RoleInline, ProfileInline]

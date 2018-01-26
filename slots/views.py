@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.translation import ugettext_lazy as _
@@ -6,7 +6,13 @@ from django.shortcuts import render, get_object_or_404
 from django.utils.safestring import mark_safe
 from django.urls import reverse
 from django.views import generic
-from . import models, utils, forms
+from . import models, forms
+
+
+def _remove_garbage():
+    deadline = datetime.now(timezone.utc) - timedelta(minutes=5)
+    for slot in models.Slot.drafts.filter(created__lte=deadline):
+        slot.delete()
 
 
 @login_required
@@ -22,7 +28,7 @@ class StationRedirect(LoginRequiredMixin, generic.RedirectView):
     permanent = False
 
     def get_redirect_url(self, *args, **kwargs):
-        utils.remove_garbage()
+        _remove_garbage()
         station = get_object_or_404(models.Station, pk=kwargs['pk'])
         today = datetime.today()
         if station.has_docks:
@@ -65,8 +71,9 @@ class StationDocks(LoginRequiredMixin, generic.DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        utils.remove_garbage()
+        _remove_garbage()
         station = self.get_object()
+        stations = models.Station.objects.filter(role__user=self.request.user)
         showdate = datetime(
             year=self.kwargs['year'], month=self.kwargs['month'],
             day=self.kwargs['day']
@@ -75,6 +82,7 @@ class StationDocks(LoginRequiredMixin, generic.DetailView):
         for dock in station.docks.all().order_by('pk'):
             docklist.append([dock.name, self.get_dock_data(dock, showdate)])
         context['docks'] = docklist
+        context['stations'] = stations
         context['showdate'] = showdate.date()  # .strftime("%A, %x")
         context['permission'] = station.get_user_role(self.request.user)
         return context
@@ -82,7 +90,7 @@ class StationDocks(LoginRequiredMixin, generic.DetailView):
 
 class SlotRedirect(LoginRequiredMixin, generic.RedirectView):
     def get_redirect_url(self, *args, **kwargs):
-        utils.remove_garbage()
+        _remove_garbage()
         slotdate = datetime(
             year=kwargs['year'], month=kwargs['month'], day=kwargs['day']
         )
