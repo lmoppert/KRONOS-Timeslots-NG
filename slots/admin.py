@@ -17,6 +17,12 @@ class JobInline(admin.TabularInline):
     model = models.Job
 
 
+class DockInline(admin.TabularInline):
+    model = models.Dock
+    exclude = ('available_slots', )
+    extra = 1
+
+
 @admin.register(models.Company)
 class CompanyAdmin(admin.ModelAdmin):
     model = models.Company
@@ -32,7 +38,7 @@ class DeadlineAdmin(admin.ModelAdmin):
 class StationAdmin(admin.ModelAdmin):
     model = models.Station
     list_display = ('__str__', 'description')
-    inlines = [RoleInline, ]
+    inlines = [RoleInline, DockInline]
 
 
 @admin.register(models.Dock)

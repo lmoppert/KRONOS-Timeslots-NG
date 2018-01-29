@@ -44,7 +44,6 @@ INSTALLED_APPS = [
     'django_extensions',
     'debug_toolbar',
     'slots',
-    'bootstrap4',
 ]
 
 MIDDLEWARE = [
@@ -136,3 +135,11 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 # Configure Plugins and Applications
 
 SHELL_PLUS_PRE_IMPORTS = [('scripts.helper', 'generate_slots')]
+
+ALERT_MESSAGES = [
+    _('debug'),
+    _('info'),
+    _('success'),
+    _('warning'),
+    _('error'),
+]

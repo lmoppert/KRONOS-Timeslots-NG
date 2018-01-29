@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta, timezone
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _
 from django.shortcuts import render, get_object_or_404
 from django.utils.safestring import mark_safe
@@ -36,6 +37,9 @@ class StationRedirect(LoginRequiredMixin, generic.RedirectView):
                            kwargs={'year': today.year, 'month': today.month,
                                    'day': today.day, 'pk': station.pk})
         else:
+            msg = _('Station "<em>{}</em>" has no docks assigned yet.').format(
+                station)
+            messages.warning(self.request, mark_safe(msg))
             return reverse('index')
 
 

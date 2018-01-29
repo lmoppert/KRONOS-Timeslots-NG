@@ -58,6 +58,15 @@
     </div>
     <div id="main">
         <div class="container">
+            {% if messages %}{% for message in messages %}
+            <div role="alert" class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %} alert-dismissible fade show">
+                <b>{% trans message.tags|upper %}</b><br>
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-labeled="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {% endfor %}{% endif %}
             {% block base_content %}{% endblock %}
         </div>
     </div>

@@ -66,6 +66,7 @@ class Station(models.Model):
         return reverse('station', args=[str(self.id)])
 
     class Meta:
+        ordering = ('pk', )
         verbose_name = _("Station")
         verbose_name_plural = _("Stations")
 
