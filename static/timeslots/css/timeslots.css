@@ -50,9 +50,12 @@ body #footer a:hover, body #main a:hover {
 #header .navbar .nav-item a#stationDropdown {
     font-weight: bold;
 }
-#header .navbar .nav-item a:hover#stationDropdown {
+/*
+#header .navbar .nav-item #stationDropdown a:focus,
+#header .navbar .nav-item #stationDropdown a:hover {
     color: #04397d;
 }
+*/
 #header .navbar .nav-item .dropdown-menu a {
     color: #04397d;
 }

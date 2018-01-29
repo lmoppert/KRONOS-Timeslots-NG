@@ -7,40 +7,16 @@ from django.urls import reverse
 from django.db import models
 
 
-class Deadline(models.Model):
-    name = models.CharField(max_length=50, verbose_name=_("Name"))
-    booking_deadline = models.TimeField(
-        default='00:00:00', verbose_name=_("Booking Deadline"),
-        help_text=_("Booking deadline = time on the day before from which on a "
-                    "slot can not be reserved any more. Set this to midnight "
-                    "to turn off this feature completely for this station"))
-    rnvp = models.TimeField(
-        default='00:00:00', verbose_name=_("Edit Deadline"),
-        help_text=_("RVNP = Rien ne vas plus -- time when a slot can not be "
-                    "edited any more, set to Midnight to have the deadline as "
-                    "RNVP"))
-
-    # def past_deadline(self, curr_date, curr_time):
-    #     my_dl = self.booking_deadline
-    #     if my_dl == time(0, 0):
-    #         deadline = datetime.combine(curr_date + timedelta(days=1), my_dl)
-    #     else:
-    #         deadline = datetime.combine(curr_date - timedelta(days=1), my_dl)
-    #     return curr_time > deadline
-
-    def __str__(self):
-        return "{} ({} / {})".format(self.name, self.booking_deadline,
-                                     self.rnvp)
-
-    class Meta:
-        verbose_name = _("Deadline")
-        verbose_name_plural = _("Deadlines")
-
-
 class Station(models.Model):
     location = models.CharField(max_length=200, verbose_name=_("Location"))
     name = models.CharField(max_length=200, verbose_name=_("Name"))
     description = models.TextField(blank=True, verbose_name=_("Description"))
+    deadline = models.TimeField(
+        default='15:00:00', verbose_name=_("Deadline"), help_text=_(
+            "Booking deadline = time on the day before from which on a slot "
+            "can not be reserved any more. Set this to midnight to turn off "
+            "this feature completely for this station")
+    )
 
     def get_user_role(self, user):
         if user.is_superuser:
@@ -81,10 +57,13 @@ class Dock(models.Model):
                                                   verbose_name=_("Slot Legth"))
     max_slots = models.PositiveSmallIntegerField(
         default=0, verbose_name=_("Max Slots"), help_text=_("0 for unlimited"))
+    rnvp = models.PositiveSmallIntegerField(
+        default=0, verbose_name=_("Edit Deadline"),
+        help_text=_("RVNP = Rien ne vas plus -- hours before the start time "
+                    "when a slot can not be edited any more. Set this to Zero "
+                    "to have the stations deadline as RNVP"))
     available_slots = JSONField(default=[[], [], [], [], [], [], []],
                                 verbose_name=_("Available Slots"))
-    deadline = models.ForeignKey(Deadline, default=1, on_delete=models.CASCADE,
-                                 verbose_name=_("Deadline"))
     multiple_charges = models.BooleanField(
         default=True, verbose_name=_("Multiple Charges"),
         help_text=_("If this option is marked, the reservation form offers the "

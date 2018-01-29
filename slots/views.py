@@ -58,7 +58,7 @@ class StationDocks(LoginRequiredMixin, generic.DetailView):
                 if qs.exists():
                     obj = qs.first()
                     url = obj.get_absolute_url()
-                    res = "{} - {}".format(obj.user.usercompany,
+                    res = "{} - {}".format(obj.user.profile,
                                            obj.job_set.first())
                     anchor = "<a href='{}' class='text-info'>{}</a>"
                     tag = mark_safe(anchor.format(url, res))

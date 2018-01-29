@@ -2,7 +2,8 @@ from datetime import datetime, timedelta, time, timezone
 from django.test import TestCase
 from django.apps import apps
 from slots.apps import SlotsConfig
-from slots import models, utils
+from slots.views import _remove_garbage
+from slots import models
 
 
 # Test basics
@@ -26,11 +27,9 @@ class ModelsTest(TestCase):
     def setUpTestData(cls):
         cls.station = models.Station(location="Leverkusen", name="packed")
         cls.station.save()
-        cls.dl = models.Deadline(name="Default")
-        cls.dl.save()
         myslots = [['7:00', '8:00', '9:00'], ['7:30'], [], [], [], [], []]
         cls.dock = models.Dock(name="Truck", station=cls.station, slotlength=60,
-                               deadline=cls.dl, available_slots=myslots)
+                               available_slots=myslots)
         cls.dock.save()
         mydate = datetime.strptime('2018-01-01', '%Y-%m-%d')
         cls.tgl = models.Company(name="KRONOS LEV", shortname="TGL")
@@ -66,11 +65,6 @@ class ModelsTest(TestCase):
         self.assertEqual(self.station.get_absolute_url(),
                          '/{}'.format(self.station.pk))
 
-    def test_deadline_creation(self):
-        self.assertTrue(isinstance(self.dl, models.Deadline))
-        self.assertEqual(self.dl.__str__(), "{} ({} / {})".format(
-            self.dl.name, self.dl.booking_deadline, self.dl.rnvp))
-
     # Dock tests
     def test_dock_creation(self):
         self.assertTrue(isinstance(self.dock, models.Dock))
@@ -102,11 +96,11 @@ class ModelsTest(TestCase):
                            index=1, line=1)
         slot.save()
         self.assertEqual(models.Slot.objects.count(), 2)
-        utils.remove_garbage()
+        _remove_garbage()
         self.assertEqual(models.Slot.objects.count(), 2)
         slot.created = datetime.now(timezone.utc)-timedelta(minutes=10)
         slot.save()
-        utils.remove_garbage()
+        _remove_garbage()
         self.assertEqual(models.Slot.objects.count(), 1)
 
     def test_slot_manager(self):
@@ -144,7 +138,7 @@ class ModelsTest(TestCase):
 
     def test_company_names(self):
         self.assertEqual(self.tgl.__str__(), "KRONOS LEV (TGL)")
-        self.assertEqual(self.tgl.usercompany_set.first().__str__(), "TGL")
+        self.assertEqual(self.tgl.profile_set.first().__str__(), "TGL")
 
     # User access tests
     def test_carrier(self):
@@ -155,12 +149,18 @@ class ModelsTest(TestCase):
         self.assertTrue(isinstance(self.master, models.User))
         self.assertEqual(self.station.get_user_role(self.master), 4)
 
-    def test_super_dummy(self):
+    def test_dummy(self):
         self.assertTrue(isinstance(self.dummy, models.User))
         self.assertEqual(self.station.get_user_role(self.dummy), 0)
+        self.assertEqual(len(self.dummy.profile.get_stations()), 0)
+
+    def test_super_dummy(self):
         self.dummy.is_superuser = True
         self.dummy.save()
         self.assertEqual(self.station.get_user_role(self.dummy), 4)
+        self.assertEqual(len(self.dummy.profile.get_stations()), 1)
+        self.dummy.is_superuser = False
+        self.dummy.save()
 
 
 # Test views
@@ -174,11 +174,9 @@ class ViewsTests(TestCase):
         cls.empty.save()
         cls.station = models.Station(location="Leverkusen", name="packed")
         cls.station.save()
-        cls.dl = models.Deadline(name="Default")
-        cls.dl.save()
         myslots = [['7:00', '8:00', '9:00'], ['7:30'], [], [], [], [], []]
         cls.dock = models.Dock(name="Truck", station=cls.station, slotlength=60,
-                               deadline=cls.dl, available_slots=myslots)
+                               available_slots=myslots)
         cls.dock.save()
         cls.today = datetime.today()
         cls.company = models.Company(name="MyCompany")
@@ -214,6 +212,8 @@ class ViewsTests(TestCase):
         self.c.login(username='dummy', password='dpass')
         res = self.c.get('/')
         self.assertContains(res, 'Leverkusen - packed')
+        self.dummy.is_superuser = False
+        self.dummy.save()
 
     def test_auth_redirect(self):
         url = '/docks/{}/date/2018/1/2'.format(self.station.pk)
@@ -233,6 +233,15 @@ class ViewsTests(TestCase):
         self.c.login(username='master', password='mpass')
         res = self.c.get('/docks/{}/date/2018/1/2'.format(self.station.pk))
         self.assertContains(res, '7:30')
+
+    def test_station_by_date_as_superuser(self):
+        self.dummy.is_superuser = True
+        self.dummy.save()
+        self.c.login(username='dummy', password='dpass')
+        res = self.c.get('/docks/{}/date/2018/1/2'.format(self.station.pk))
+        self.assertContains(res, '7:30')
+        self.dummy.is_superuser = False
+        self.dummy.save()
 
     def test_slot_in_table(self):
         self.c.login(username='master', password='mpass')
@@ -256,3 +265,11 @@ class ViewsTests(TestCase):
         slot = models.Slot.objects.last()
         self.assertRedirects(res, '/newslot/{}'.format(slot.pk))
         self.assertEqual(slot.user.username, 'carrier')
+
+# Not implemented yet
+#    def test_slot_form(self):
+#        self.c.login(username='carrier', password='cpass')
+#        url = '/slot/{}'.format(self.slot.pk)
+#        res = self.c.post(url, {
+#            'job_set-0-number': '4711', 'job_set-0-payload': '25'})
+#        self.assertContains(res, 'Reservation for')

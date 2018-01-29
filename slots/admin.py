@@ -28,16 +28,10 @@ class CompanyAdmin(admin.ModelAdmin):
     model = models.Company
 
 
-@admin.register(models.Deadline)
-class DeadlineAdmin(admin.ModelAdmin):
-    model = models.Deadline
-    list_display = ('name', 'booking_deadline', 'rnvp')
-
-
 @admin.register(models.Station)
 class StationAdmin(admin.ModelAdmin):
     model = models.Station
-    list_display = ('__str__', 'description')
+    list_display = ('__str__', 'deadline', 'description')
     inlines = [RoleInline, DockInline]
 
 
@@ -48,14 +42,14 @@ class DockAdmin(admin.ModelAdmin):
         (None, {
             'fields': ('name', 'station')}),
         ('Parameters', {
-            'fields': ('linecount', 'max_slots', 'slotlength', 'deadline')}),
+            'fields': ('linecount', 'max_slots', 'slotlength', 'rnvp')}),
         ('Flags', {
             'fields': ('multiple_charges', 'has_status', 'has_klv')}),
         ('Timeslots', {
             'fields': ('available_slots', )}),
     )
     readonly_fields = ('available_slots', )
-    list_display = ('__str__', 'deadline')
+    list_display = ('__str__', 'linecount', 'slotlength', 'max_slots', 'rnvp')
 
 
 @admin.register(models.Slot)
