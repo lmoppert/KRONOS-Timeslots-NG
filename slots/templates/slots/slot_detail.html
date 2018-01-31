@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
+{% load widget_tweaks %}
 
 {% block base_content %}
 <h1>
@@ -16,31 +17,59 @@
         <td>{{ object.start }} - {{ object.end }}</td>
     </tr><tr>
         <th>{% trans "User" %}</th>
-        <td>{{ object.user.get_full_name }} ({{ object.user.usercompany }})</td>
+        <td>{{ object.user.get_full_name }} ({{ object.user.profile }})</td>
     </tr><tr>
         <th>{% trans "Created" %}</th>
         <td>{{ object.created }}</td>
     </tr>
 </table>
 
-<form method="post" action="" class="form">
+<form method="post" class="form">
     {% csrf_token %} 
-    {{ formset.manaement_form }}
+    {{ formset.management_form }}
 
-    {% for form in formset %}
-    <div class="form-group form-inline">
-            {{ form }}
-    </div>
-    {% endfor %}
-
-    <div class="form-group">
-        <button type="submit" class="btn btn-success">
-            {% trans "Save Reservation" %}
-        </button>
-        <button type="submit" class="btn btn-warning">
-            {% trans "Cancel Reservation" %}
-        </button>
-    </div>
+    <table class="table table-sm">
+        <tr>
+            <th width="180px">{% trans "Order Number" %}</th>
+            <th width="120px">{% trans "Payload" %}</th>
+            <th>{% trans "Description" %}</th>
+            <th width="50px">{% trans "Delete" %}</th>
+        </tr>
+        {% for form in formset %}
+            {% for hidden_field in form.hidden_fields %}
+                {{ hidden_field }}
+            {% endfor %}
+        <tr>
+            {% for field in form.visible_fields %}
+            <td>
+                {% if form.is_bound %}
+                    {% if field.errors %}
+                        {% render_field field class="form-control is-invalid" %}
+                        {% for error in field.errors %}
+                            <div class="invalid-feedback">{{ error }}</div>
+                        {% endfor %}
+                    {% else %}
+                        {% render_field field class="form-control is-valid" %}
+                    {% endif %}
+                {% else %}
+                    {% render_field field class="form-control" %}
+                {% endif %}
+            </td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+        <caption>
+            <button type="submit" class="btn btn-success" name="saveSlot">
+                {% trans "Save Reservation" %}
+            </button>
+            <button type="submit" class="btn btn-warning" name="deleteSlot">
+                {% trans "Cancel Reservation" %}
+            </button>
+            {% if form.non_field_errors %}
+                {% for error in form.non_field_errors %}{{ error }}{% endfor %}
+            {% endif %}
+        </caption>
+    </table>
 </form>
 
 {% endblock %}

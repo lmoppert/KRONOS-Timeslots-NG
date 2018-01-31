@@ -7,6 +7,7 @@ psycopg2
 ##############################################################################
 # Optional packages 
 ##############################################################################
+django-widget-tweaks
 # django-crispy-forms
 # django-bootstrap4
 # django-tables2

@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta, timezone
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponseRedirect
 from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _
 from django.shortcuts import render, get_object_or_404
@@ -114,34 +115,32 @@ class SlotRedirect(LoginRequiredMixin, generic.RedirectView):
             return reverse('slotdetail', kwargs={'pk': slot.pk})
 
 
-class SlotDisplay(generic.DetailView):
-    model = models.Slot
-    template_name = 'slots/slot_detail.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['formset'] = forms.JobFormSet(instance=self.object)
-        return context
-
-
-class SlotJobs(generic.detail.SingleObjectMixin, generic.FormView):
-    model = models.Slot
-    template_name = 'slots/slot_detail.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['formset'] = forms.JobFormSet(instance=self.object)
-        return context
-
-
 class SlotDetail(LoginRequiredMixin, generic.DetailView):
-    """This view is using the above defined classes to provide the actual view.
-    Which one to use is determined by the type of request we get (POST or GET).
-    """
-    def get(self, request, *args, **kwargs):
-        view = SlotDisplay.as_view()
-        return view(request, *args, **kwargs)
+    model = models.Slot
+    template_name = 'slots/slot_detail.html'
 
     def post(self, request, *args, **kwargs):
-        view = SlotJobs.as_view()
-        return view(request, *args, **kwargs)
+        self.object = self.get_object()
+        dock = self.object.dock
+        if 'deleteSlot' in request.POST:
+            self.object.delete()
+            return HttpResponseRedirect(dock.station.get_absolute_url())
+        if dock.multiple_charges:
+            formset = forms.JobFormSet(request.POST, instance=self.object)
+        else:
+            formset = forms.SingleJobFormSet(request.POST, instance=self.object)
+        if formset.is_valid():
+            formset.save()
+            return HttpResponseRedirect(dock.station.get_absolute_url())
+        context = self.get_context_data(object=self.object)
+        return self.render_to_response(context)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.object.dock.multiple_charges:
+            context['formset'] = forms.JobFormSet(instance=self.object)
+            context['multiple_forms'] = True
+        else:
+            context['formset'] = forms.SingleJobFormSet(instance=self.object)
+            context['multiple_forms'] = False
+        return context
