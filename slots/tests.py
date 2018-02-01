@@ -178,6 +178,9 @@ class ViewsTests(TestCase):
         cls.dock = models.Dock(name="Truck", station=cls.station, slotlength=60,
                                available_slots=myslots)
         cls.dock.save()
+        cls.dock1 = models.Dock(name="Silo", station=cls.station, slotlength=60,
+                               available_slots=myslots, multiple_charges=False)
+        cls.dock1.save()
         cls.today = datetime.today()
         cls.company = models.Company(name="MyCompany")
         cls.company.save()
@@ -197,6 +200,9 @@ class ViewsTests(TestCase):
         cls.slot = models.Slot(dock=cls.dock, date=cls.slotdate, index=1,
                                line=0, user=cls.carrier)
         cls.slot.save()
+        cls.slot1 = models.Slot(dock=cls.dock1, date=cls.slotdate, index=1,
+                               line=0, user=cls.carrier)
+        cls.slot1.save()
         cls.job = models.Job(number="4711", slot=cls.slot)
         cls.job.save()
 
@@ -266,10 +272,24 @@ class ViewsTests(TestCase):
         self.assertRedirects(res, '/newslot/{}'.format(slot.pk))
         self.assertEqual(slot.user.username, 'carrier')
 
-# Not implemented yet
-#    def test_slot_form(self):
-#        self.c.login(username='carrier', password='cpass')
-#        url = '/slot/{}'.format(self.slot.pk)
-#        res = self.c.post(url, {
-#            'job_set-0-number': '4711', 'job_set-0-payload': '25'})
-#        self.assertContains(res, 'Reservation for')
+    def test_slot_form_multiple_charges_failing(self):
+        self.c.login(username='carrier', password='cpass')
+        url = '/slot/{}'.format(self.slot.pk)
+        res = self.c.post(url, {
+            'job_set-MAX_NUM_FORMS': '1000', 'job_set-MIN_NUM_FORMS': '1',
+            'job_set-TOTAL_FORMS': '1', 'job_set-INITIAL_FORMS': '1',
+            'job_set-0-number': '4711', 'job_set-0-payload': '25',
+            'job_set-0-slot': self.slot.pk,
+        })
+        self.assertContains(res, 'Reservation for')
+
+    def test_slot_form_single_charge_failing(self):
+        self.c.login(username='carrier', password='cpass')
+        url = '/slot/{}'.format(self.slot1.pk)
+        res = self.c.post(url, {
+            'job_set-MAX_NUM_FORMS': '1', 'job_set-MIN_NUM_FORMS': '1',
+            'job_set-TOTAL_FORMS': '1', 'job_set-INITIAL_FORMS': '1',
+            'job_set-0-number': '4712', 'job_set-0-payload': '25',
+            'job_set-0-slot': self.slot1.pk,
+        })
+        self.assertContains(res, 'Reservation for')

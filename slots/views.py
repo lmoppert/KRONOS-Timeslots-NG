@@ -34,9 +34,9 @@ class StationRedirect(LoginRequiredMixin, generic.RedirectView):
         station = get_object_or_404(models.Station, pk=kwargs['pk'])
         today = datetime.today()
         if station.has_docks:
-            return reverse('stationdocks',
-                           kwargs={'year': today.year, 'month': today.month,
-                                   'day': today.day, 'pk': station.pk})
+            return reverse('stationdocks', kwargs={
+                'year': today.year, 'month': today.month, 'day': today.day,
+                'pk': station.pk})
         else:
             msg = _('Station "<em>{}</em>" has no docks assigned yet.').format(
                 station)
