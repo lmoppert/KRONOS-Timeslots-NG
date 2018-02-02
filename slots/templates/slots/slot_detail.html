@@ -39,25 +39,35 @@
             {% for hidden_field in form.hidden_fields %}
                 {{ hidden_field }}
             {% endfor %}
-        <tr>
-            {% for field in form.visible_fields %}
-            <td>
-                {% if form.is_bound %}
-                    {% if field.errors %}
-                        {% render_field field class="form-control is-invalid" %}
-                        {% for error in field.errors %}
-                            <div class="invalid-feedback">{{ error }}</div>
-                        {% endfor %}
+            <tr>
+                {% for field in form.visible_fields %}
+                <td>
+                    {% if form.is_bound %}
+                        {% if field.errors %}
+                            {% render_field field class="form-control is-invalid" %}
+                            {% for error in field.errors %}
+                                <div class="invalid-feedback">{{ error }}</div>
+                            {% endfor %}
+                        {% else %}
+                            {% render_field field class="form-control is-valid" %}
+                        {% endif %}
                     {% else %}
-                        {% render_field field class="form-control is-valid" %}
+                        {% render_field field class="form-control" %}
                     {% endif %}
-                {% else %}
-                    {% render_field field class="form-control" %}
-                {% endif %}
-            </td>
-            {% endfor %}
-        </tr>
+                </td>
+                {% endfor %}
+            </tr>
         {% endfor %}
+        {% if multiple_forms %}
+            <tr>
+                <td colspan="4" class="text-right">
+                    <button class="btn btn-sm btn-secondary" name="addJob">
+                        <span class="oi oi-plus" title="+" aria-hidden="true"></span>
+                        {% trans "Add more jobs" %}
+                    </button>
+                </td>
+            </tr>
+        {% endif %}
         <caption>
             <button type="submit" class="btn btn-success" name="saveSlot">
                 {% trans "Save Reservation" %}

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-29 16:28+0000\n"
+"POT-Creation-Date: 2018-02-02 14:38+0100\n"
 "PO-Revision-Date: 2018-01-16 13:37+0000\n"
 "Last-Translator: Lutz Moppert <lutz.moppert@kronosww.com>\n"
 "Language-Team: \n"
@@ -17,23 +17,24 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: slots/models.py:11
+#: .\slots\models.py:11
 msgid "Location"
 msgstr "Standort"
 
-#: slots/models.py:12 slots/models.py:51 slots/models.py:185
+#: .\slots\models.py:12 .\slots\models.py:51 .\slots\models.py:185
 msgid "Name"
 msgstr "Name"
 
-#: slots/models.py:13 slots/models.py:172
+#: .\slots\models.py:13 .\slots\models.py:172
+#: .\slots\templates\slots\slot_detail.html:35
 msgid "Description"
 msgstr "Beschreibung"
 
-#: slots/models.py:15
+#: .\slots\models.py:15
 msgid "Deadline"
 msgstr "Deadline"
 
-#: slots/models.py:16
+#: .\slots\models.py:16
 msgid ""
 "Booking deadline = time on the day before from which on a slot can not be "
 "reserved any more. Set this to midnight to turn off this feature completely "
@@ -43,35 +44,35 @@ msgstr ""
 "nicht mehr gebucht werden kann. Zum deaktivieren dieser Funktion wird dies "
 "auf Mitternacht gestellt."
 
-#: slots/models.py:46 slots/models.py:53
+#: .\slots\models.py:46 .\slots\models.py:53
 msgid "Station"
 msgstr "Ladestelle"
 
-#: slots/models.py:47
+#: .\slots\models.py:47
 msgid "Stations"
 msgstr "Ladestellen"
 
-#: slots/models.py:55
+#: .\slots\models.py:55
 msgid "Line Count"
 msgstr "Anzahl Reihen"
 
-#: slots/models.py:57
+#: .\slots\models.py:57
 msgid "Slot Legth"
 msgstr "Zeitfenster Länge"
 
-#: slots/models.py:59
+#: .\slots\models.py:59
 msgid "Max Slots"
 msgstr "Maximal buchbare Slots"
 
-#: slots/models.py:59
+#: .\slots\models.py:59
 msgid "0 for unlimited"
 msgstr "0 für unbegrenzt"
 
-#: slots/models.py:61
+#: .\slots\models.py:61
 msgid "Edit Deadline"
 msgstr "Deadline für Änderungen"
 
-#: slots/models.py:62
+#: .\slots\models.py:62
 msgid ""
 "RVNP = Rien ne vas plus -- hours before the start time when a slot can not "
 "be edited any more. Set this to Zero to have the stations deadline as RNVP"
@@ -79,15 +80,15 @@ msgstr ""
 "RVNP = Rien ne vas plus -- Zeitraum in Stunden vor dem Termin, ab dem keine "
 "Änderung an einer bestehenden Reservierung mehr gemacht werden kann."
 
-#: slots/models.py:66
+#: .\slots\models.py:66
 msgid "Available Slots"
 msgstr "Verfügbare Ladefenster"
 
-#: slots/models.py:68
+#: .\slots\models.py:68
 msgid "Multiple Charges"
 msgstr "Mehrere Aufträge möglich"
 
-#: slots/models.py:69
+#: .\slots\models.py:69
 msgid ""
 "If this option is marked, the reservation form offers the opportunity to add "
 "more than one job"
@@ -95,11 +96,11 @@ msgstr ""
 "Wird diese Option aktiviert, können bei einer Reservierung mehrere Aufträge "
 "angegeben werden."
 
-#: slots/models.py:72
+#: .\slots\models.py:72
 msgid "Has Status"
 msgstr "Ladefortschritt möglich"
 
-#: slots/models.py:73
+#: .\slots\models.py:73
 msgid ""
 "This option adds a Statusbar to the job view, which shows the current "
 "loading status"
@@ -107,212 +108,220 @@ msgstr ""
 "Diese Option fügt einem reservierten Slot einen Statusbalken hinzu, der den "
 "derzeitigen Ladestatus repräsentiert."
 
-#: slots/models.py:76
+#: .\slots\models.py:76
 msgid "Has KLV"
 msgstr "KLV Kennzeichen möglich"
 
-#: slots/models.py:77
+#: .\slots\models.py:77
 msgid ""
 "Choose this option if you want to be able to mark charges with an KLV/NV flag"
 msgstr ""
 "Ist diese Option gesetzt, können Reservierungen mit dem KLV/NV Kennzeichen "
 "markiert werden."
 
-#: slots/models.py:97 slots/models.py:121
-#: slots/templates/slots/slot_detail.html:12
+#: .\slots\models.py:97 .\slots\models.py:121
+#: .\slots\templates\slots\slot_detail.html:13
 msgid "Dock"
 msgstr "Rampe"
 
-#: slots/models.py:98
+#: .\slots\models.py:98
 msgid "Docks"
 msgstr "Rampen"
 
-#: slots/models.py:119 slots/models.py:201
-#: slots/templates/slots/slot_detail.html:18
+#: .\slots\models.py:119 .\slots\models.py:201
+#: .\slots\templates\slots\slot_detail.html:19
 msgid "User"
 msgstr "Anwender"
 
-#: slots/models.py:122
+#: .\slots\models.py:122
 msgid "Date"
 msgstr "Datum"
 
-#: slots/models.py:123
+#: .\slots\models.py:123
 msgid "Index"
 msgstr "Index"
 
-#: slots/models.py:124
+#: .\slots\models.py:124
 msgid "Line"
 msgstr "Reihe"
 
-#: slots/models.py:126
+#: .\slots\models.py:126
 msgid "Progress"
 msgstr "Ladefortschritt"
 
-#: slots/models.py:127
+#: .\slots\models.py:127
 msgid "Is KLV"
 msgstr "KLV"
 
-#: slots/models.py:129
+#: .\slots\models.py:129
 msgid "Is Blocked"
 msgstr "Blockiert"
 
-#: slots/models.py:131
+#: .\slots\models.py:131
 msgid "Time Created"
 msgstr "Erstellt am"
 
-#: slots/models.py:160
+#: .\slots\models.py:160
 msgid "Timelot"
 msgstr "Zeitfenster"
 
-#: slots/models.py:161
+#: .\slots\models.py:161
 msgid "Timeslots"
 msgstr "Zeitfenster"
 
-#: slots/models.py:167
+#: .\slots\models.py:167
 msgid "Slot"
 msgstr "Slot"
 
-#: slots/models.py:168
+#: .\slots\models.py:168 .\slots\templates\slots\slot_detail.html:33
 msgid "Order Number"
 msgstr "Auftragsnummer"
 
-#: slots/models.py:170
+#: .\slots\models.py:170 .\slots\templates\slots\slot_detail.html:34
 msgid "Payload"
 msgstr "Ladegewicht"
 
-#: slots/models.py:178
+#: .\slots\models.py:178
 msgid "Job"
 msgstr "Auftrag"
 
-#: slots/models.py:179
+#: .\slots\models.py:179
 msgid "Jobs"
 msgstr "Aufträge"
 
-#: slots/models.py:184
+#: .\slots\models.py:184
 msgid "Short Name"
 msgstr "Kurzname"
 
-#: slots/models.py:186
+#: .\slots\models.py:186
 msgid "Contact"
 msgstr "Kontakt"
 
-#: slots/models.py:195 slots/models.py:203
+#: .\slots\models.py:195 .\slots\models.py:203
 msgid "Company"
 msgstr "Firma"
 
-#: slots/models.py:196
+#: .\slots\models.py:196
 msgid "Companies"
 msgstr "Firmen"
 
-#: slots/models.py:218
+#: .\slots\models.py:218
 msgid "User Company"
 msgstr "Firmenzugrhörigkeit"
 
-#: slots/models.py:219
+#: .\slots\models.py:219
 msgid "User Companies"
 msgstr "Firmenzugrhörigkeiten"
 
-#: slots/models.py:223
+#: .\slots\models.py:223
 msgid "carrier"
 msgstr "Spediteur"
 
-#: slots/models.py:223
+#: .\slots\models.py:223
 msgid "viewer"
 msgstr "Zuschauer"
 
-#: slots/models.py:223
+#: .\slots\models.py:223
 msgid "charger"
 msgstr "Belader"
 
-#: slots/models.py:224
+#: .\slots\models.py:224
 msgid "loadmaster"
 msgstr "Lademeister"
 
-#: slots/models.py:230
+#: .\slots\models.py:230
 msgid "Role"
 msgstr "Rolle"
 
-#: slots/models.py:231
+#: .\slots\models.py:231
 msgid "Roles"
 msgstr "Rollen"
 
-#: slots/templates/slots/index.html:5
+#: .\slots\templates\slots\index.html:5
 msgid "New Timeslots"
 msgstr "Timeslots V2.0"
 
-#: slots/templates/slots/index.html:8
+#: .\slots\templates\slots\index.html:8
 msgid "Available Stations"
 msgstr "Verfügbare Ladestellen"
 
-#: slots/templates/slots/slot_detail.html:6
+#: .\slots\templates\slots\slot_detail.html:7
 msgid "Reservation for"
 msgstr "Reservierung für den"
 
-#: slots/templates/slots/slot_detail.html:15
+#: .\slots\templates\slots\slot_detail.html:16
 msgid "Timeslot"
 msgstr "Zeitfenster"
 
-#: slots/templates/slots/slot_detail.html:21
+#: .\slots\templates\slots\slot_detail.html:22
 msgid "Created"
 msgstr "Erstellt am"
 
-#: slots/templates/slots/slot_detail.html:38
+#: .\slots\templates\slots\slot_detail.html:36
+msgid "Delete"
+msgstr "Löschen"
+
+#: .\slots\templates\slots\slot_detail.html:66
+msgid "Add more jobs"
+msgstr "Weitere Aufträge hinzufügen"
+
+#: .\slots\templates\slots\slot_detail.html:73
 msgid "Save Reservation"
 msgstr "Reservierung speichern"
 
-#: slots/templates/slots/slot_detail.html:41
+#: .\slots\templates\slots\slot_detail.html:76
 msgid "Cancel Reservation"
 msgstr "Reservierung löschen"
 
-#: slots/views.py:40
+#: .\slots\views.py:41
 msgid "Station \"<em>{}</em>\" has no docks assigned yet."
 msgstr "Der Ladestelle \"<em>{}</em>\" wurden noch keine Rampen zugeordnet."
 
-#: slots/views.py:71
+#: .\slots\views.py:72
 msgid "Free"
 msgstr "Frei"
 
-#: templates/base.html:54
+#: .\templates\base.html:55
 msgid "Administration"
 msgstr "Administration"
 
-#: templates/base.html:55
+#: .\templates\base.html:56
 msgid "Profil"
 msgstr "Profil"
 
-#: templates/registration/login.html:6
+#: .\templates\registration\login.html:6
 msgid "KRONOS-Timeslots Login"
 msgstr "KRONOS-Timeslots Anmeldung"
 
-#: templates/registration/login.html:11
+#: .\templates\registration\login.html:11
 msgid "Login"
 msgstr "Anmelden"
 
-#: timeslots/settings.py:122
+#: .\timeslots\settings.py:123
 msgid "German"
 msgstr "Deutsch"
 
-#: timeslots/settings.py:123
+#: .\timeslots\settings.py:124
 msgid "English"
 msgstr "Englisch"
 
-#: timeslots/settings.py:140
+#: .\timeslots\settings.py:141
 msgid "debug"
 msgstr "debug"
 
-#: timeslots/settings.py:141
+#: .\timeslots\settings.py:142
 msgid "info"
 msgstr "information"
 
-#: timeslots/settings.py:142
+#: .\timeslots\settings.py:143
 msgid "success"
 msgstr "erfolgreich verarbeitet"
 
-#: timeslots/settings.py:143
+#: .\timeslots\settings.py:144
 msgid "warning"
 msgstr "warnung"
 
-#: timeslots/settings.py:144
+#: .\timeslots\settings.py:145
 msgid "error"
 msgstr "fehler"
 
