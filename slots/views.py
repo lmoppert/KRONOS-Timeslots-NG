@@ -49,10 +49,10 @@ class StationDocks(LoginRequiredMixin, generic.DetailView):
     template_name = 'slots/station_detail.html'
 
     def get_dock_data(self, dock, date):
-        starttimes = dock.available_slots[date.weekday()]
+        start_times = dock.available_slots[date.weekday()]
         reserved_slots = models.Slot.objects.filter(date=date, dock=dock)
         slots = []
-        for i, start in enumerate(starttimes):
+        for i, start in enumerate(start_times):
             slot = [start]
             for line in range(dock.linecount):
                 qs = reserved_slots.filter(index=i, line=line)

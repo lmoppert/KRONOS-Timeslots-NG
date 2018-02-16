@@ -2,28 +2,26 @@
 {% load i18n %}
 
 {% block base_content %}
-<h1>{{ showdate|date:"l" }}, {{ showdate }}</h1>
-<div class="row">
-{% for dock, slots in docks %}
-<div class="col-sm slot-tables">
-    <h2 class="text-center">{{ dock }}</h2>
-    <table class="table table-striped table-bordered table-hover table-sm">
-        {% for slot in slots %}
-        <tr>
-            {% for col in slot %}
-            {% if forloop.counter0 %}
-                <td>{{ col }}</td>
-            {% else %}
-                <th style="width: 3.5em;" class="table-active">{{ col }}</th>
-            {% endif %}
-            {% endfor %}
-        </tr>
-        {% endfor %}
-    </table>
-</div>
-{% endfor %}
-</div>
-
+    <h1>{{ showdate|date:'l' }}, {{ showdate }}</h1>
+    {% for dock, slots in docks %}
+        <div class="col-sm slot-tables">
+            <h2 class="text-center">{{ dock }}</h2>
+            <table class="table table-striped table-bordered table-hover table-sm">
+                {% for slot in slots %}
+                <tr>
+                    {% for col in slot %}
+                        {% if forloop.counter0 %}
+                            <td>{{ col }}</td>
+                        {% else %}
+                            <th style="width: 3.5em;" class="table-active">{{ col }}</th>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    {% endfor %}
 {% endblock %}
+
 <!-- vim:syntax=htmldjango
 -->

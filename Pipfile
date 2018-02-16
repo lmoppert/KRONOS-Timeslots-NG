@@ -1,0 +1,20 @@
+[[source]]
+
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+
+[packages]
+
+Django = "*"
+"psycopg2" = "*"
+django-widget-tweaks = "*"
+django-extensions = "*"
+
+
+[dev-packages]
+
+django-debug-toolbar = "*"
+coverage = "*"
+

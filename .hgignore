@@ -5,3 +5,4 @@ __pycache__
 *.mo
 logs/*
 workspace.xml
+*.html.py

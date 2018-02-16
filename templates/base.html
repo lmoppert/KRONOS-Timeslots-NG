@@ -13,9 +13,27 @@
     <title>KRONOS - Timeslots</title>
     <link rel="shortcut icon" type="image/ico" href="{% static "timeslots/img/favicon.ico" %}">
     <link rel="stylesheet" type="text/css" href="{% static "timeslots/css/timeslots.css" %}">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css"
-          integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="{% static "timeslots/css/open-iconic-bootstrap.min.css" %}">
+    <link rel="stylesheet" crossorigin="anonymous"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css"
+          integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/css/tempusdominus-bootstrap-4.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous" defer></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js"
+            integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4"
+            crossorigin="anonymous" defer></script>
+    <script src="{% static "timeslots/js/moment-with-locales.min.js" %}"
+            defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/js/tempusdominus-bootstrap-4.min.js"
+            defer></script>
+    <script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"
+            defer></script>
     {% block extra_head %}{% endblock %}
 </head>
 <body>
@@ -35,12 +53,25 @@
                         </a>
                         <div class="dropdown-menu" aria-labelledby="stationDropdown">
                             {% for item in stations %}
-                            <a class="dropdown-item {% if item == station %}active{% endif %}" href="/{{ item.pk }}">
-                                {{ item }}
-                            </a>
+                                <a class="dropdown-item {% if item == station %}active{% endif %}" href="/{{ item.pk }}">
+                                    {{ item }}
+                                </a>
                             {% endfor %}
                         </div>
                     </li>
+                    <li class="nav-item ml-1" id="datepicker">
+                        <a class="btn btn-light nav-link" href="#" role="button" data-target="#datepicker" data-toggle="datetimepicker">
+                            <span class="fas fa-calendar-alt"></span>
+                        </a>
+                    </li>
+                    <script type="text/javascript">
+                     $(function () {
+                         $("#datepicker").datetimepicker({
+                             format: 'L',
+                             locale: '{{ LANGUAGE_CODE }}'
+                         });
+                     });
+                    </script>
                     {% endif %}
                 </ul>
                 <ul class="navbar-nav">
@@ -48,7 +79,7 @@
                         {% if user.is_authenticated %}
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <b>{{ user.get_full_name }}</b>
+                            <b>{{ user.profile }}</b>
                             {{ permission|show_role }}
                         </a>
                         <div class="dropdown-menu" aria-labelledby="userDropdown">
@@ -72,7 +103,9 @@
                 </button>
             </div>
             {% endfor %}{% endif %}
+            <div class="row">
             {% block base_content %}{% endblock %}
+            </div>
         </div>
     </div>
     <div id="footer">
@@ -86,17 +119,6 @@
             Dallas, TX, 75240 | United States<br>Phone: (972) 233-1700 | Fax: (972) 448-1445 |
             <a href="mailto:kronos.marketing@kronosww.com">kronos.marketing@kronosww.com</a>
         </div>
-    </div>
-
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" crossorigin="anonymous"
-            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN">
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" crossorigin="anonymous"
-            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q">
-    </script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" crossorigin="anonymous"
-            integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4">
-    </script>
     </div>
 </body>
 </html>

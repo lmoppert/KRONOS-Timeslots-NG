@@ -209,7 +209,9 @@ class Profile(models.Model):
             return Station.objects.filter(role__user=self.user)
 
     def __str__(self):
-        if len(self.company.shortname) > 1:
+        if len(self.user.get_full_name()) > 1:
+            return self.user.get_full_name()
+        elif len(self.company.shortname) > 1:
             return self.company.shortname
         else:
             return self.company.name
