@@ -65,10 +65,18 @@
                         </a>
                     </li>
                     <script type="text/javascript">
-                     $(function () {
+                     $(function() {
                          $("#datepicker").datetimepicker({
-                             format: 'L',
+                             format: 'YYYY-MM-DD',
+                             date: '{{ showdate|date:"Y-m-d" }}',
                              locale: '{{ LANGUAGE_CODE }}'
+                         });
+                         $("#datepicker").on('change.datetimepicker', function(ev) {
+                             if (ev.oldDate != null) {
+                                 window.location.href = "/docks/{{ station.id }}/date/" + ev.date.format("YYYY/M/D")
+                             } else {
+                                 alert(ev.date)
+                             }
                          });
                      });
                     </script>
