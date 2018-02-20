@@ -68,6 +68,15 @@
                      $(function() {
                          $("#datepicker").datetimepicker({
                              format: 'YYYY-MM-DD',
+                             calendarWeeks: true,
+                             icons: {
+                                 today: 'far fa-calendar'
+                             },
+                             buttons: {
+                                 showToday: true,
+                                 showClear: false,
+                                 showClose: false
+                             },
                              date: '{{ showdate|date:"Y-m-d" }}',
                              locale: '{{ LANGUAGE_CODE }}'
                          });
