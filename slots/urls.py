@@ -7,8 +7,9 @@ date_match = '/date/<int:year>/<int:month>/<int:day>'
 urlpatterns = [
     path('', views.index, name='index'),
     path('accounts/login/', auth_views.LoginView.as_view(), name='login'),
-    path('<int:pk>', views.StationRedirect.as_view(), name='station'),
-    path('docks/<int:pk>' + date_match,
+    path('<int:pk>', views.StationRedirect.as_view(), name='root'),
+    path('station/<int:pk>', views.StationRedirect.as_view(), name='station'),
+    path('station/<int:pk>' + date_match,
          views.StationDocks.as_view(), name='stationdocks'),
     path('slot/<int:dock>/<int:index>/<int:line>' + date_match,
          views.SlotRedirect.as_view(), name='getslot'),

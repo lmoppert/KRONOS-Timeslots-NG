@@ -73,7 +73,7 @@
                          });
                          $("#datepicker").on('change.datetimepicker', function(ev) {
                              if (ev.oldDate != null) {
-                                 window.location.href = "/docks/{{ station.id }}/date/" + ev.date.format("YYYY/M/D")
+                                 window.location.href = "{% url "station" station.id %}/date/" + ev.date.format("YYYY/MM/DD")
                              } else {
                                  alert(ev.date)
                              }
@@ -130,5 +130,5 @@
     </div>
 </body>
 </html>
-<!-- vim:syntax=htmldjango
+<!-- vim:syntax=htmldjango tw=150
 -->

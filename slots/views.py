@@ -92,7 +92,9 @@ class StationDocks(LoginRequiredMixin, generic.DetailView):
             docklist.append([dock.name, self.get_dock_data(dock, showdate)])
         context['docks'] = docklist
         context['stations'] = stations
-        context['showdate'] = showdate.date()  # .strftime("%A, %x")
+        context['showdate'] = showdate.date()
+        context['prevday'] = (showdate - timedelta(days=1)).day
+        context['nextday'] = (showdate + timedelta(days=1)).day
         context['permission'] = station.get_user_role(self.request.user)
         return context
 
@@ -131,7 +133,12 @@ class SlotDetail(LoginRequiredMixin, generic.DetailView):
             formset = forms.SingleJobFormSet(request.POST, instance=self.object)
         if formset.is_valid():
             formset.save()
-            return HttpResponseRedirect(dock.station.get_absolute_url())
+            return HttpResponseRedirect(reverse('stationdocks', kwargs={
+                'pk': self.object.dock.station.pk,
+                'year': self.object.date.year,
+                'month': self.object.date.month,
+                'day': self.object.date.day,
+            }))
         context = self.get_context_data(object=self.object)
         return self.render_to_response(context)
 

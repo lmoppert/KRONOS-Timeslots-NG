@@ -2,7 +2,15 @@
 {% load i18n %}
 
 {% block base_content %}
-    <h1>{{ showdate|date:'l' }}, {{ showdate }}</h1>
+    <h1 class="text-center">
+        <small><a href="{% url 'stationdocks' station.id showdate|date:'Y' showdate|date:'m' prevday %}">
+            <span class="fas fa-chevron-circle-left"></span>
+        </a></small>
+        {{ showdate|date:'l' }}, {{ showdate }}
+        <small><a href="{% url 'stationdocks' station.id showdate|date:'Y' showdate|date:'m' nextday %}">
+            <span class="fas fa-chevron-circle-right"></span></a>
+        </a></small>
+    </h1>
     {% for dock, slots in docks %}
         <div class="col-sm slot-tables">
             <h2 class="text-center">{{ dock }}</h2>
@@ -23,5 +31,5 @@
     {% endfor %}
 {% endblock %}
 
-<!-- vim:syntax=htmldjango
+<!-- vim:syntax=htmldjango tw=150
 -->
