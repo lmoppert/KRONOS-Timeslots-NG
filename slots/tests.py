@@ -63,7 +63,7 @@ class ModelsTest(TestCase):
 
     def test_station_ablosute_url(self):
         self.assertEqual(self.station.get_absolute_url(),
-                         '/{}'.format(self.station.pk))
+                         '/station/{}'.format(self.station.pk))
 
     # Dock tests
     def test_dock_creation(self):
@@ -138,7 +138,9 @@ class ModelsTest(TestCase):
 
     def test_company_names(self):
         self.assertEqual(self.tgl.__str__(), "KRONOS LEV (TGL)")
-        self.assertEqual(self.tgl.profile_set.first().__str__(), "TGL")
+        self.assertEqual(self.dummy.profile.__str__(), "MyCompany")
+        self.company.shortname = "MC"
+        self.assertEqual(self.dummy.profile.__str__(), "MC")
 
     # User access tests
     def test_carrier(self):
@@ -148,6 +150,7 @@ class ModelsTest(TestCase):
     def test_master(self):
         self.assertTrue(isinstance(self.master, models.User))
         self.assertEqual(self.station.get_user_role(self.master), 4)
+        self.assertEqual(self.master.profile.__str__(), "Load Master")
 
     def test_dummy(self):
         self.assertTrue(isinstance(self.dummy, models.User))
@@ -179,7 +182,7 @@ class ViewsTests(TestCase):
                                available_slots=myslots)
         cls.dock.save()
         cls.dock1 = models.Dock(name="Silo", station=cls.station, slotlength=60,
-                               available_slots=myslots, multiple_charges=False)
+                                available_slots=myslots, multiple_charges=False)
         cls.dock1.save()
         cls.today = datetime.today()
         cls.company = models.Company(name="MyCompany")
@@ -201,7 +204,7 @@ class ViewsTests(TestCase):
                                line=0, user=cls.carrier)
         cls.slot.save()
         cls.slot1 = models.Slot(dock=cls.dock1, date=cls.slotdate, index=1,
-                               line=0, user=cls.carrier)
+                                line=0, user=cls.carrier)
         cls.slot1.save()
         cls.job = models.Job(number="4711", slot=cls.slot)
         cls.job.save()
@@ -222,7 +225,7 @@ class ViewsTests(TestCase):
         self.dummy.save()
 
     def test_auth_redirect(self):
-        url = '/docks/{}/date/2018/1/2'.format(self.station.pk)
+        url = '/station/{}/date/2018/1/2'.format(self.station.pk)
         res = self.c.get(url)
         self.assertRedirects(res, '/accounts/login/?next={}'.format(url))
         self.assertTrue(self.c.login(username='master', password='mpass'))
@@ -230,28 +233,28 @@ class ViewsTests(TestCase):
     def test_station_redirects(self):
         self.c.login(username='master', password='mpass')
         res = self.c.get('/{}'.format(self.station.pk))
-        self.assertRedirects(res, '/docks/{}/date/{}/{}/{}'.format(
+        self.assertRedirects(res, '/station/{}/date/{}/{}/{}'.format(
             self.station.pk, self.today.year, self.today.month, self.today.day))
         res = self.c.get('/{}'.format(self.empty.pk))
         self.assertRedirects(res, '/')
 
     def test_station_by_date(self):
         self.c.login(username='master', password='mpass')
-        res = self.c.get('/docks/{}/date/2018/1/2'.format(self.station.pk))
+        res = self.c.get('/station/{}/date/2018/1/2'.format(self.station.pk))
         self.assertContains(res, '7:30')
 
     def test_station_by_date_as_superuser(self):
         self.dummy.is_superuser = True
         self.dummy.save()
         self.c.login(username='dummy', password='dpass')
-        res = self.c.get('/docks/{}/date/2018/1/2'.format(self.station.pk))
+        res = self.c.get('/station/{}/date/2018/1/2'.format(self.station.pk))
         self.assertContains(res, '7:30')
         self.dummy.is_superuser = False
         self.dummy.save()
 
     def test_slot_in_table(self):
         self.c.login(username='master', password='mpass')
-        res = self.c.get('/docks/{}/date/2018/1/1'.format(self.station.pk))
+        res = self.c.get('/station/{}/date/2018/1/1'.format(self.station.pk))
         self.assertContains(res, 'MyCompany - 4711')
 
     def test_slot_redirect(self):

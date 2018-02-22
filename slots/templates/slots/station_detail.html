@@ -2,33 +2,47 @@
 {% load i18n %}
 
 {% block base_content %}
-    <h1 class="text-center">
-        <small><a href="{% url 'stationdocks' station.id showdate|date:'Y' showdate|date:'m' prevday %}">
-            <span class="fas fa-chevron-circle-left"></span>
-        </a></small>
-        {{ showdate|date:'l' }}, {{ showdate }}
-        <small><a href="{% url 'stationdocks' station.id showdate|date:'Y' showdate|date:'m' nextday %}">
-            <span class="fas fa-chevron-circle-right"></span></a>
-        </a></small>
-    </h1>
-    {% for dock, slots in docks %}
-        <div class="col-sm slot-tables">
-            <h2 class="text-center">{{ dock }}</h2>
-            <table class="table table-striped table-bordered table-hover table-sm">
-                {% for slot in slots %}
-                <tr>
-                    {% for col in slot %}
-                        {% if forloop.counter0 %}
-                            <td>{{ col }}</td>
-                        {% else %}
-                            <th style="width: 3.5em;" class="table-active">{{ col }}</th>
-                        {% endif %}
-                    {% endfor %}
-                </tr>
-                {% endfor %}
-            </table>
+    <div class="col-sm-6">
+        <h1 class="text-center">
+            <small><a href="{% url 'stationdocks' station.id showdate|date:'Y' showdate|date:'m' prevday %}">
+                <span class="fas fa-chevron-circle-left"></span>
+            </a></small>
+            {{ showdate|date:'l' }}, {{ showdate }}
+            <small><a href="{% url 'stationdocks' station.id showdate|date:'Y' showdate|date:'m' nextday %}">
+                <span class="fas fa-chevron-circle-right"></span></a>
+            </a></small>
+        </h1>
+    </div>
+    <div class="col-sm-6">
+        <div class="btn-group" role="group" aria-label="Dock buttons">
+        {% for dock, slots in docks %}
+            <button type="button" class="btn btn-secondary" data-toggle="collapse" data-target="#{{ dock }}"
+                    aria-expanded="true" aria-controls="{{ dock }}" aria-pressed="false">
+                {{ dock }}
+            </button>
+        {% endfor %}
         </div>
-    {% endfor %}
+    </div>
+</div>
+<div class="row">
+{% for dock, slots in docks %}
+<div class="col-sm slot-tables collapse show" id="{{ dock }}">
+        <h2 class="text-center">{{ dock }}</h2>
+        <table class="table table-striped table-bordered table-hover table-sm">
+            {% for slot in slots %}
+            <tr>
+                {% for col in slot %}
+                    {% if forloop.counter0 %}
+                        <td>{{ col }}</td>
+                    {% else %}
+                        <th style="width: 3.5em;" class="table-active">{{ col }}</th>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% endfor %}
 {% endblock %}
 
 <!-- vim:syntax=htmldjango tw=150
