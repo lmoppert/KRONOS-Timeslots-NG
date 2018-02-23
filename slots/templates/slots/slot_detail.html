@@ -24,17 +24,20 @@
     </tr>
 </table>
 
-<form method="post" class="form">
+<form method="post" class="form w-100">
     {% csrf_token %}
     {{ formset.management_form }}
 
     <table class="table table-sm">
-        <tr>
-            <th width="180px">{% trans "Order Number" %}</th>
-            <th width="120px">{% trans "Payload" %}</th>
-            <th>{% trans "Description" %}</th>
-            <th width="50px">{% trans "Delete" %}</th>
-        </tr>
+        <thead>
+            <tr>
+                <th>{% trans "Order Number" %}</th>
+                <th>{% trans "Payload" %}</th>
+                <th class="w-75">{% trans "Description" %}</th>
+                <th>{% trans "Delete" %}</th>
+            </tr>
+        </thead>
+        <tbody>
         {% for form in formset %}
             {% for hidden_field in form.hidden_fields %}
                 {{ hidden_field }}
@@ -62,12 +65,13 @@
             <tr>
                 <td colspan="4" class="text-right">
                     <button class="btn btn-sm btn-secondary" name="addJob">
-                        <span class="oi oi-plus" title="+" aria-hidden="true"></span>
+                        <span class="fas fa-plus wr-1" title="+" aria-hidden="true"></span>
                         {% trans "Add more jobs" %}
                     </button>
                 </td>
             </tr>
         {% endif %}
+        </tbody>
         <caption>
             <button type="submit" class="btn btn-success" name="saveSlot">
                 {% trans "Save Reservation" %}

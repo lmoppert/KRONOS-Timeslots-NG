@@ -100,8 +100,15 @@
                             {{ permission|show_role }}
                         </a>
                         <div class="dropdown-menu" aria-labelledby="userDropdown">
-                            <a class="dropdown-item" href="/admin">{% trans "Administration" %}</a>
-                            <a class="dropdown-item" href="#">{% trans "Profil" %}</a>
+                            <a class="dropdown-item" href="/admin">
+                                <span class="fas fa-cogs"></span>
+                                {% trans "Administration" %}
+                            </a>
+                            <a class="dropdown-item" href="#">
+                                <span class="fas fa-user"></span>
+                                {% trans "Profil" %}
+                            </a>
+                            {% block user_menu %}{% endblock %}
                         </div>
                         {% endif %}
                     </li>
